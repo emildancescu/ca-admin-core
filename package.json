@@ -7,6 +7,7 @@
     "build": "react-app-rewired build",
     "build:lib": "rm -rf dist && mkdir dist && babel src -d dist --ignore 'src/index.jx','src/serviceWorker.js','src/test.js','src/theme.js'",
     "build:test": "rm -rf dist && mkdir dist && babel src/test.js -o dist/test.js",
+    "prepare": "npm run build:lib",
     "test": "react-app-rewired test",
     "lint-staged": "lint-staged",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss,less}\"",
@@ -31,7 +32,11 @@
       "stylelint"
     ]
   },
-  "main": "dist/test.js",
+  "main": "dist/lib.js",
+  "module": "dist/lib.js",
+  "files": [
+    "dist/*"
+  ],
   "babel": {
     "presets": [
       "@babel/preset-react"
