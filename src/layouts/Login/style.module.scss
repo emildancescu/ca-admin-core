@@ -1,0 +1,53 @@
+@import 'assets/styles/mixins.scss';
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  background-color: $gray-lighten-more;
+  background-size: cover;
+  transition: background-image 0.4s linear;
+
+  @media (max-width: $sm-max-width) {
+    :global(.login-heading) {
+      display: none;
+    }
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: rem(50);
+  align-self: flex-start;
+  width: 100%;
+  padding: rem(40);
+
+  @media (max-width: $md-max-width) {
+    padding: rem(40) rem(20) rem(40);
+  }
+
+  @media screen and (max-width: $sm-max-width) {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+}
+
+.logo {
+  max-height: rem(40);
+  flex-shrink: 0;
+
+  img {
+    max-height: rem(40);
+  }
+}
+
+.content {
+  align-self: middle;
+}

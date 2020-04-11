@@ -1,0 +1,6 @@
+.ant-form-inline .ant-form-item {
+  margin-right: .5rem;
+}
+.ant-form-inline .ant-form-item:last-child {
+  margin-right: 0;
+}

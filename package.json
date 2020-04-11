@@ -1,0 +1,138 @@
+{
+  "name": "ca-admin-core",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "build:lib": "rm -rf dist && mkdir dist && babel src -d dist --ignore 'src/index.jx','src/serviceWorker.js','src/test.js','src/theme.js'",
+    "build:test": "rm -rf dist && mkdir dist && babel src/test.js -o dist/test.js",
+    "test": "react-app-rewired test",
+    "lint-staged": "lint-staged",
+    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss,less}\"",
+    "eslint": "eslint --ext .js,jsx src",
+    "tslint": "tslint \"src/**/*.{ts,tsx}\"",
+    "stylelint": "stylelint \"src/**/*.{scss,less}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,scss,less}": [
+      "prettier --write",
+      "git add"
+    ],
+    "src/**/*.{js,jsx}": [
+      "eslint"
+    ],
+    "src/**/*.{scss,less}": [
+      "stylelint"
+    ]
+  },
+  "main": "dist/test.js",
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "decoratorsBeforeExport": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "connected-react-router": "^6.4.0",
+    "history": "^4.9.0",
+    "nprogress": "^0.2.0",
+    "rc-drawer": "^1.7.7",
+    "react-custom-scrollbars": "^4.2.1",
+    "react-intl": "^2.8.0",
+    "react-loadable": "^5.5.0",
+    "react-qr-reader": "^2.2.1",
+    "redux-logger": "^3.0.6"
+  },
+  "peerDependencies": {
+    "antd": "^3.23.2",
+    "bootstrap-css-only": "^4.2.1",
+    "classnames": "^2.2.6",
+    "leaflet": "^1.5.1",
+    "leaflet-ant-path": "^1.3.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "prop-types": "^15.7.1",
+    "qs": "^6.6.0",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "react-helmet": "^5.2.0",
+    "react-leaflet": "^2.4.0",
+    "react-leaflet-ant-path": "^1.1.0",
+    "react-leaflet-fullscreen": "^1.0.1",
+    "react-redux": "^6.0.0",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "redux": "^4.0.1",
+    "redux-saga": "^1.0.1",
+    "redux-thunk": "^2.3.0",
+    "store": "^2.0.12"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/preset-react": "^7.9.4",
+    "antd": "^3.23.2",
+    "babel-plugin-import": "^1.11.0",
+    "bootstrap-css-only": "^4.2.1",
+    "classnames": "^2.2.6",
+    "customize-cra": "^0.2.11",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.0.0",
+    "husky": "^1.3.1",
+    "leaflet": "^1.5.1",
+    "leaflet-ant-path": "^1.3.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "lint-staged": "^8.1.3",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "node-sass": "^4.11.0",
+    "prettier": "^1.17.1",
+    "prop-types": "^15.7.1",
+    "qs": "^6.6.0",
+    "react": "^16.8.1",
+    "react-app-rewired": "^2.1.0",
+    "react-dom": "^16.8.1",
+    "react-helmet": "^5.2.0",
+    "react-leaflet": "^2.4.0",
+    "react-leaflet-ant-path": "^1.1.0",
+    "react-leaflet-fullscreen": "^1.0.1",
+    "react-redux": "^6.0.0",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "2.1.5",
+    "redux": "^4.0.1",
+    "redux-saga": "^1.0.1",
+    "redux-thunk": "^2.3.0",
+    "store": "^2.0.12",
+    "stylelint": "^9.10.1",
+    "stylelint-config-prettier": "^4.0.0",
+    "stylelint-config-standard": "^18.2.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
