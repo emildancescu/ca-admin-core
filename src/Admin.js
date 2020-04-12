@@ -30,21 +30,22 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_REDUX_LOGGER
   middlewares.push(logger)
 }
 
-let store
+const createAdminStore = (reducers, sagas) => {
+  const store = createStore(
+    initReducers(history, reducers),
+    compose(applyMiddleware(...middlewares)),
+  )
+  sagaMiddleware.run(initSagas(sagas))
 
-export default class Main extends Component {
-  constructor(props) {
-    super(props)
+  return store
+}
 
-    const { reducers, sagas } = props
-
-    store = createStore(initReducers(history, reducers), compose(applyMiddleware(...middlewares)))
-    sagaMiddleware.run(initSagas(sagas))
-  }
-
+export default class Admin extends Component {
   render() {
+    const { reducers, sagas } = this.props
+
     return (
-      <Provider store={store}>
+      <Provider store={createAdminStore(reducers, sagas)}>
         <Localization>
           <Router history={history} routes={routes} />
         </Localization>

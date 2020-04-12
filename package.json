@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "build:lib": "rm -rf dist && mkdir dist && babel src -d dist --ignore 'src/index.jx','src/serviceWorker.js','src/test.js','src/theme.js'",
+    "build:lib": "rm -rf dist && mkdir dist && babel src -d dist --ignore 'src/index.js','src/test.js','src/theme.js' --copy-files --no-copy-ignored",
     "build:test": "rm -rf dist && mkdir dist && babel src/test.js -o dist/test.js",
     "prepare": "npm run build:lib",
     "test": "react-app-rewired test",
@@ -33,7 +33,6 @@
     ]
   },
   "main": "dist/lib.js",
-  "module": "dist/lib.js",
   "files": [
     "dist/*"
   ],
@@ -45,13 +44,19 @@
       [
         "@babel/plugin-proposal-decorators",
         {
-          "decoratorsBeforeExport": true
+          "legacy": true
         }
       ],
       [
         "@babel/plugin-proposal-class-properties",
         {
           "loose": true
+        }
+      ],
+      [
+        "babel-plugin-module-resolver",
+        {
+          "root": ["./src/"]
         }
       ]
     ]
@@ -98,6 +103,7 @@
     "@babel/preset-react": "^7.9.4",
     "antd": "^3.23.2",
     "babel-plugin-import": "^1.11.0",
+    "babel-plugin-module-resolver": "^4.0.0",
     "bootstrap-css-only": "^4.2.1",
     "classnames": "^2.2.6",
     "customize-cra": "^0.2.11",
