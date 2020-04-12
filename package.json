@@ -56,7 +56,17 @@
       [
         "babel-plugin-module-resolver",
         {
-          "root": ["./src/"]
+          "root": [
+            "./src/"
+          ]
+        }
+      ],
+      [
+        "babel-plugin-import",
+        {
+          "libraryName": "antd", 
+          "libraryDirectory": "es",
+          "style": true
         }
       ]
     ]
