@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form as AntForm, Input, Button, Select, DatePicker, InputNumber, Checkbox } from 'antd'
 import moment from 'moment'
-import QRScanner from 'components/CityLink/generic/QRScanner'
+import QRScanner from 'components/generic/QRScanner'
 import countries from './countries.json'
 import './style.css'
 

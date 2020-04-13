@@ -34,7 +34,13 @@ class AppMenu extends React.Component {
   }
 
   render() {
-    const { isMenuTop, isMobileMenuOpen, isMobileView, isLightTheme } = this.props
+    const {
+      isMenuTop,
+      isMobileMenuOpen,
+      isMobileView,
+      isLightTheme,
+      menu: { left = [], top = [] } = {},
+    } = this.props
     const BootstrappedMenu = () => {
       if (isMobileView) {
         return (
@@ -46,14 +52,14 @@ class AppMenu extends React.Component {
             onHandleClick={this.toggleOpen}
             className={isLightTheme ? 'drawer-light' : ''}
           >
-            <MenuLeft />
+            <MenuLeft menu={left} />
           </DrawerMenu>
         )
       }
       if (isMenuTop) {
-        return <MenuTop />
+        return <MenuTop menu={top} />
       }
-      return <MenuLeft />
+      return <MenuLeft menu={left} />
     }
 
     return BootstrappedMenu()

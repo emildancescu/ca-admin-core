@@ -11,7 +11,6 @@ const { Sider } = Layout
 const { SubMenu, Divider } = Menu
 
 const mapStateToProps = ({ menu, settings }) => ({
-  menuData: menu.menuLeftData,
   badges: menu.badges,
   isMenuCollapsed: settings.isMenuCollapsed,
   isMobileView: settings.isMobileView,
@@ -46,7 +45,7 @@ class MenuLeft extends React.Component {
   }
 
   setSelectedKeys = () => {
-    const { menuData, location } = this.props
+    const { menu, location } = this.props
 
     const flattenItems = (items, key) =>
       items.reduce((flattenedItems, item) => {
@@ -57,7 +56,7 @@ class MenuLeft extends React.Component {
         return flattenedItems
       }, [])
 
-    const selectedItem = _.find(flattenItems(menuData, 'children'), ['url', location.pathname])
+    const selectedItem = _.find(flattenItems(menu, 'children'), ['url', location.pathname])
 
     const {
       selectedKeys: [currentSelection],
@@ -105,7 +104,7 @@ class MenuLeft extends React.Component {
   }
 
   generateMenuItems = () => {
-    const { menuData = [], badges } = this.props
+    const { menu = [], badges } = this.props
     const generateItem = item => {
       const { key, title, url, icon, disabled, badge } = item
       if (item.divider) {
@@ -167,7 +166,7 @@ class MenuLeft extends React.Component {
         return generateItem(menuItem)
       })
 
-    return menuData.map(menuItem => {
+    return menu.map(menuItem => {
       if (menuItem.children) {
         const subMenuTitle = (
           <span key={menuItem.key}>

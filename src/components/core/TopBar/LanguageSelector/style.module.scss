@@ -1,9 +1,10 @@
-@import 'assets/styles/mixins.scss';
+@import '../../../../assets/styles/mixins.scss';
 
 .dropdown {
   padding-right: 15px;
   position: relative;
   cursor: pointer;
+  @include transition-slow;
 
   &::after {
     color: $gray;
@@ -31,12 +32,10 @@
       color: $gray-darken;
     }
   }
-}
 
-.avatar {
-  background-color: $gray-border;
-}
-
-.menuIcon {
-  margin-right: rem(5);
+  :global {
+    .anticon {
+      font-size: rem(16) !important;
+    }
+  }
 }

@@ -2,20 +2,20 @@ import React, { Component } from 'react'
 import { logger } from 'redux-logger'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
+import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware } from 'connected-react-router'
 import { createStore, applyMiddleware, compose } from 'redux'
-import createSagaMiddleware from 'redux-saga'
 import { createBrowserHistory } from 'history'
-import Router from 'router'
-import Localization from 'components/LayoutComponents/Localization'
 import * as serviceWorker from 'serviceWorker'
+
+import Router from 'Router'
+import Localization from 'components/core/Localization'
 import initReducers from 'redux/reducers'
 import initSagas from 'redux/sagas'
-
-import routes from 'services/routes'
+import defaultRoutes from 'services/routes'
 
 // app styles
-import './global.scss'
+import './assets/styles/global.scss'
 
 // disable cache-first approach
 serviceWorker.unregister()
@@ -42,12 +42,17 @@ const createAdminStore = (reducers, sagas) => {
 
 export default class Admin extends Component {
   render() {
-    const { reducers, sagas } = this.props
+    const { reducers, sagas, routes = [], menu, title } = this.props
 
     return (
       <Provider store={createAdminStore(reducers, sagas)}>
         <Localization>
-          <Router history={history} routes={routes} />
+          <Router
+            history={history}
+            routes={[...defaultRoutes, ...routes]}
+            menu={menu}
+            title={title}
+          />
         </Localization>
       </Provider>
     )

@@ -3,8 +3,8 @@ import { Layout } from 'antd'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames'
-import TopBar from 'components/LayoutComponents/TopBar'
-import Menu from 'components/LayoutComponents/Menu'
+import TopBar from 'components/core/TopBar'
+import Menu from 'components/core/Menu'
 
 const mapStateToProps = ({ settings }) => ({
   isBorderless: settings.isBorderless,
@@ -25,6 +25,7 @@ class MainLayout extends React.PureComponent {
       isFixedWidth,
       isMenuShadow,
       isMenuTop,
+      menu,
     } = this.props
     return (
       <Layout
@@ -36,7 +37,7 @@ class MainLayout extends React.PureComponent {
           settings__menuTop: isMenuTop,
         })}
       >
-        <Menu />
+        <Menu menu={menu} />
         <Layout>
           <Layout.Header>
             <TopBar />

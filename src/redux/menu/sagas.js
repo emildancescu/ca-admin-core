@@ -1,16 +1,11 @@
-import { all, put, call } from 'redux-saga/effects'
-import { getLeftMenuData, getTopMenuData } from 'services/menu'
+import { all } from 'redux-saga/effects'
 
 export function* GET_DATA() {
-  const menuLeftData = yield call(getLeftMenuData)
-  const menuTopData = yield call(getTopMenuData)
-  yield put({
-    type: 'menu/SET_STATE',
-    payload: {
-      menuLeftData,
-      menuTopData,
-    },
-  })
+  // yield put({
+  //   type: 'menu/SET_STATE',
+  //   payload: {
+  //   },
+  // })
 }
 
 export default function* rootSaga() {

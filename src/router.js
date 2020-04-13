@@ -6,7 +6,7 @@ import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
 import ReactLoadable from 'react-loadable'
 
-import Loader from 'components/LayoutComponents/Loader'
+import Loader from 'components/core/Loader'
 import IndexLayout from 'layouts'
 import NotFoundPage from 'pages/404'
 
@@ -64,11 +64,11 @@ class ModalSwitch extends React.Component {
 
 class Router extends React.Component {
   render() {
-    const { history, routes } = this.props
+    const { history, routes, menu, title } = this.props
 
     return (
       <ConnectedRouter history={history}>
-        <IndexLayout>
+        <IndexLayout menu={menu} title={title}>
           <ModalSwitch routes={routes} />
         </IndexLayout>
 

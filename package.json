@@ -5,8 +5,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "build:lib": "rm -rf dist && mkdir dist && babel src -d dist --ignore 'src/index.js','src/test.js','src/theme.js' --copy-files --no-copy-ignored",
-    "build:test": "rm -rf dist && mkdir dist && babel src/test.js -o dist/test.js",
+    "build:lib": "rm -rf dist && mkdir dist && babel src -d dist --ignore 'src/index.js','src/theme.js','src/App.js' --copy-files --no-copy-ignored",
     "prepare": "npm run build:lib",
     "test": "react-app-rewired test",
     "lint-staged": "lint-staged",

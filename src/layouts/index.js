@@ -3,7 +3,7 @@ import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import NProgress from 'nprogress'
 import { Helmet } from 'react-helmet'
-import Loader from 'components/LayoutComponents/Loader'
+import Loader from 'components/core/Loader'
 import PublicLayout from './Public'
 import LoginLayout from './Login'
 import MainLayout from './Main'
@@ -32,6 +32,8 @@ class IndexLayout extends React.PureComponent {
       children,
       location: { pathname, search },
       user,
+      menu,
+      title,
     } = this.props
 
     NProgress.configure({ showSpinner: false })
@@ -77,12 +79,12 @@ class IndexLayout extends React.PureComponent {
         return <Redirect to="/dashboard" />
       }
       // in other case render previously set layout
-      return <Container>{children}</Container>
+      return <Container menu={menu}>{children}</Container>
     }
 
     return (
       <Fragment>
-        <Helmet titleTemplate="Citylink | %s" title="Dashboard" />
+        <Helmet titleTemplate={`${title || 'Admin'} | %s`} title="Dashboard" />
         {BootstrappedLayout()}
       </Fragment>
     )

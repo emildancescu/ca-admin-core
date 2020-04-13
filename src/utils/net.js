@@ -96,3 +96,11 @@ export function destroy(url, params, token, headers) {
     headers,
   }
 }
+
+export default {
+  api,
+  postJson,
+  putJson,
+  get,
+  destroy,
+}
