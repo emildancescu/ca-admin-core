@@ -1,4 +1,4 @@
-import { Loadable } from 'lib'
+import { Loadable } from 'components/core/Router'
 
 export default [
   // System Pages
