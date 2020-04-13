@@ -1,4 +1,4 @@
-const request = (options, action, extra) => ({
+export const request = (options, action, extra) => ({
   type: 'network/request',
   payload: {
     options,

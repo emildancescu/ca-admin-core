@@ -8,14 +8,14 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { createBrowserHistory } from 'history'
 import * as serviceWorker from 'serviceWorker'
 
-import Router from 'Router'
+import Router from 'components/core/Router'
 import Localization from 'components/core/Localization'
 import initReducers from 'redux/reducers'
 import initSagas from 'redux/sagas'
 import defaultRoutes from 'services/routes'
 
 // app styles
-import './assets/styles/global.scss'
+import 'assets/styles/global.scss'
 
 // disable cache-first approach
 serviceWorker.unregister()
