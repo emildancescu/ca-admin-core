@@ -13,6 +13,7 @@ import Localization from 'components/core/Localization'
 import initReducers from 'redux/reducers'
 import initSagas from 'redux/sagas'
 import defaultRoutes from 'services/routes'
+import { API, ADMIN_ROLES } from 'utils/constants'
 
 // app styles
 import 'assets/styles/global.scss'
@@ -30,22 +31,39 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_REDUX_LOGGER
   middlewares.push(logger)
 }
 
-const createAdminStore = (reducers, sagas) => {
+const defaultAuthConfig = {
+  url: API.LOGIN,
+  adminRoles: ADMIN_ROLES,
+  transformPayload: payload => ({
+    id: payload.user.id,
+    name: payload.user.first_name,
+    roles: payload.roles.map(role => role.name),
+    token: payload.accessToken,
+    email: payload.user.email,
+  }),
+}
+
+const createAdminStore = (reducers, sagas, authConfig = {}) => {
+  const auth = {
+    ...defaultAuthConfig,
+    ...authConfig,
+  }
+
   const store = createStore(
-    initReducers(history, reducers),
+    initReducers({ history, auth }, reducers),
     compose(applyMiddleware(...middlewares)),
   )
-  sagaMiddleware.run(initSagas(sagas))
+  sagaMiddleware.run(initSagas({ auth }, sagas))
 
   return store
 }
 
 export default class Admin extends Component {
   render() {
-    const { reducers, sagas, routes = [], menu, title } = this.props
+    const { reducers, sagas, authConfig, routes = [], menu, title } = this.props
 
     return (
-      <Provider store={createAdminStore(reducers, sagas)}>
+      <Provider store={createAdminStore(reducers, sagas, authConfig)}>
         <Localization>
           <Router
             history={history}

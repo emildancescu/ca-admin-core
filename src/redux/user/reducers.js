@@ -2,19 +2,24 @@ import store from 'store'
 import actions from './actions'
 
 const defaultUser = {
+  authorized: false,
+  loading: false,
+  error: null,
+
+  // mandatory props
   id: '',
   name: '',
   email: '',
-  authorized: false,
   roles: [],
+  permissions: [],
   token: null,
-  loading: false,
-  error: null,
 }
 
 const initialState = store.get('app.user') || defaultUser
 
-export default function userReducer(state = initialState, action) {
+const userReducer = config => (state = initialState, action) => {
+  const { transformPayload } = config
+
   switch (action.type) {
     case actions.REQUEST:
       return {
@@ -24,13 +29,9 @@ export default function userReducer(state = initialState, action) {
     case actions.SUCCESS:
       return {
         ...state,
-        id: action.payload.user.id,
-        name: action.payload.user.first_name,
-        roles: action.payload.roles.map(role => role.name),
         authorized: true,
-        token: action.payload.accessToken,
-        email: action.payload.user.email,
         loading: false,
+        ...transformPayload(action.payload),
       }
     case actions.ERROR:
       return {
@@ -44,3 +45,5 @@ export default function userReducer(state = initialState, action) {
       return state
   }
 }
+
+export default userReducer
