@@ -10,10 +10,10 @@ import * as serviceWorker from 'serviceWorker'
 
 import Router from 'components/core/Router'
 import Localization from 'components/core/Localization'
+import defaultModules from 'modules'
+import defaultRoutes from 'services/routes'
 import initReducers from 'redux/reducers'
 import initSagas from 'redux/sagas'
-import defaultRoutes from 'services/routes'
-import { API, ADMIN_ROLES } from 'utils/constants'
 
 // app styles
 import 'assets/styles/global.scss'
@@ -31,44 +31,88 @@ if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_REDUX_LOGGER
   middlewares.push(logger)
 }
 
-const defaultAuthConfig = {
-  url: API.LOGIN,
-  adminRoles: ADMIN_ROLES,
-  transformPayload: payload => ({
-    id: payload.user.id,
-    name: payload.user.first_name,
-    roles: payload.roles.map(role => role.name),
-    token: payload.accessToken,
-    email: payload.user.email,
-  }),
+const processModules = (modules = []) => {
+  modules = [...defaultModules, ...modules]
+
+  // ensure module uniqueness and correct ordering
+  const processedModules = new Map()
+
+  modules.forEach(module => {
+    processedModules.set(module.name, module)
+  })
+
+  return Array.from(processedModules.values())
 }
 
-const createAdminStore = (reducers, sagas, authConfig = {}) => {
-  const auth = {
-    ...defaultAuthConfig,
-    ...authConfig,
-  }
+const createAdminStore = modules => {
+  modules = [...defaultModules, ...modules]
+
+  let reducers = {}
+  let sagas = []
+
+  modules.forEach(module => {
+    if (module.reducers) {
+      reducers = {
+        ...reducers,
+        ...module.reducers,
+      }
+    }
+
+    if (module.sagas) {
+      sagas = [...sagas, ...module.sagas]
+    }
+  })
 
   const store = createStore(
-    initReducers({ history, auth }, reducers),
+    initReducers({ history }, reducers),
     compose(applyMiddleware(...middlewares)),
   )
-  sagaMiddleware.run(initSagas({ auth }, sagas))
+  sagaMiddleware.run(initSagas({}, sagas))
 
   return store
 }
 
+const getRoutes = modules => {
+  let routes = [...defaultRoutes]
+
+  modules.forEach(module => {
+    if (module.routes) {
+      routes = [...routes, ...module.routes]
+    }
+  })
+
+  return routes
+}
+
+const getMenu = modules => {
+  let left = []
+
+  modules.forEach(module => {
+    if (module.menu) {
+      left = [...left, ...module.menu]
+    }
+  })
+
+  return {
+    left,
+    top: [],
+  }
+}
+
 export default class Admin extends Component {
   render() {
-    const { reducers, sagas, authConfig, routes = [], menu, title } = this.props
+    const { title } = this.props
+    let { modules } = this.props
+
+    modules = processModules(modules)
 
     return (
-      <Provider store={createAdminStore(reducers, sagas, authConfig)}>
+      <Provider store={createAdminStore(modules)}>
         <Localization>
           <Router
             history={history}
-            routes={[...defaultRoutes, ...routes]}
-            menu={menu}
+            routes={getRoutes(modules)}
+            menu={getMenu(modules)}
             title={title}
           />
         </Localization>

@@ -11,4 +11,6 @@ export { default as Form } from 'components/generic/Form'
 export { default as Map } from 'components/generic/Map'
 export { default as QRScanner } from 'components/generic/QRScanner'
 
+export { default as core } from 'modules/core'
+
 export * from 'redux/network/actions'
