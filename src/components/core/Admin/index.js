@@ -45,8 +45,6 @@ const processModules = (modules = []) => {
 }
 
 const createAdminStore = modules => {
-  modules = [...defaultModules, ...modules]
-
   let reducers = {}
   let sagas = []
 
@@ -100,19 +98,24 @@ const getMenu = modules => {
 }
 
 export default class Admin extends Component {
+  constructor(props) {
+    super(props)
+
+    const { modules } = this.props
+
+    this.modules = processModules(modules)
+  }
+
   render() {
     const { title } = this.props
-    let { modules } = this.props
-
-    modules = processModules(modules)
 
     return (
-      <Provider store={createAdminStore(modules)}>
+      <Provider store={createAdminStore(this.modules)}>
         <Localization>
           <Router
             history={history}
-            routes={getRoutes(modules)}
-            menu={getMenu(modules)}
+            routes={getRoutes(this.modules)}
+            menu={getMenu(this.modules)}
             title={title}
           />
         </Localization>
