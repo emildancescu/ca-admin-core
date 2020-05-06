@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Menu, Dropdown, Avatar } from 'antd'
 import { FormattedMessage } from 'react-intl'
-import { APP_LAST_UPDATE } from 'utils/constants'
+// import { APP_LAST_UPDATE } from 'utils/constants'
 import styles from './style.module.scss'
 
 @connect(({ user }) => ({ user }))
@@ -35,14 +35,14 @@ class ProfileMenu extends React.Component {
           </div>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item>
+        {/* <Menu.Item>
           <a href="#">
             <i className={`${styles.menuIcon} icmn-user`} />
             <FormattedMessage id="topBar.profileMenu.editProfile" />
           </a>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item disabled>Last updated: {APP_LAST_UPDATE}</Menu.Item>
+        <Menu.Item disabled>Last updated: {APP_LAST_UPDATE}</Menu.Item> */}
         <Menu.Item>
           <a href="#" onClick={this.reload}>
             <i className={`${styles.menuIcon} icmn-spinner11`} />
