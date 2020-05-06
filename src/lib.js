@@ -1,4 +1,4 @@
-export { default as net } from 'utils/net'
+export { default as net } from 'utils/net' // api, postJson, putJson, get, destroy
 
 export { default as Authorize } from 'components/core/Authorize'
 export { default as DetailsModal } from 'components/core/DetailsModal'
@@ -11,4 +11,6 @@ export { default as Form } from 'components/generic/Form'
 export { default as Map } from 'components/generic/Map'
 export { default as QRScanner } from 'components/generic/QRScanner'
 
-export * from 'redux/network/actions'
+export { request, networkActions, extraNetworkActions } from 'redux/network/actions'
+
+export { getToken, getBaseAuthHeaders } from 'utils/auth'
