@@ -1,5 +1,14 @@
 import React from 'react'
-import { Form as AntForm, Input, Button, Select, DatePicker, InputNumber, Checkbox } from 'antd'
+import {
+  Form as AntForm,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  InputNumber,
+  Checkbox,
+  Upload,
+} from 'antd'
 import moment from 'moment'
 import QRScanner from 'components/generic/QRScanner'
 import countries from './countries.json'
@@ -117,6 +126,14 @@ class Form extends React.Component {
     })(this.getCountrySelectItem())
   }
 
+  fileUploadEvent = e => {
+    // console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e
+    }
+    return e && e.fileList
+  }
+
   getItem = itemConfig => {
     const { field, type, placeholder, disabled, ...rest } = itemConfig
 
@@ -154,6 +171,12 @@ class Form extends React.Component {
         return <Input.TextArea placeholder={placeholder} disabled={disabled} />
       case 'checkbox':
         return <Checkbox>{placeholder}</Checkbox>
+      case 'file':
+        return (
+          <Upload name="file" {...rest}>
+            <Button icon="upload">{placeholder}</Button>
+          </Upload>
+        )
       default:
         return (
           <Input
@@ -162,6 +185,17 @@ class Form extends React.Component {
             onChange={() => this.handleOnChange(field)}
           />
         )
+    }
+  }
+
+  getExtraProps = type => {
+    switch (type) {
+      case 'checkbox':
+        return { valuePropName: 'checked' }
+      case 'file':
+        return { valuePropName: 'fileList', getValueFromEvent: this.fileUploadEvent }
+      default:
+        return { valuePropName: 'value' }
     }
   }
 
@@ -175,7 +209,7 @@ class Form extends React.Component {
     let { props, initialValue } = itemConfig
 
     // adjust value prop name, depending on input type
-    const valuePropName = type === 'checkbox' ? 'checked' : 'value'
+    const extraProps = this.getExtraProps(type)
 
     // set field errors, if any
     if (errors && errors[field]) {
@@ -200,7 +234,7 @@ class Form extends React.Component {
     return (
       <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>
         {!items &&
-          getFieldDecorator(field, { rules, initialValue, valuePropName })(
+          getFieldDecorator(field, { rules, initialValue, ...extraProps })(
             this.getItem(itemConfig),
           )}
         {items && items.map(subItemConfig => this.getFormItem(subItemConfig, true))}
