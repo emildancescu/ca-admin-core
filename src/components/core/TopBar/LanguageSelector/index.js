@@ -24,17 +24,29 @@ class LanguageSelector extends React.Component {
 
     const langMenu = (
       <Menu className={styles.menu} selectedKeys={[locale]} onClick={this.changeLang}>
-        <Menu.Item key="en-US">
+        <Menu.Item key="en">
           <span role="img" aria-label="English" className="mr-2">
             🇬🇧
           </span>
           English
         </Menu.Item>
-        <Menu.Item key="ro-RO">
+        <Menu.Item key="ro">
           <span role="img" aria-label="Romana" className="mr-2">
             🇷🇴
           </span>
           Romana
+        </Menu.Item>
+        <Menu.Item key="uk">
+          <span role="img" aria-label="Ukrainean" className="mr-2">
+            🇺🇦
+          </span>
+          Українська
+        </Menu.Item>
+        <Menu.Item key="ru">
+          <span role="img" aria-label="Russian" className="mr-2">
+            🇷🇺
+          </span>
+          Русский
         </Menu.Item>
       </Menu>
     )

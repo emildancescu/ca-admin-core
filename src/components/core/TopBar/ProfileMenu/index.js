@@ -46,7 +46,7 @@ class ProfileMenu extends React.Component {
         <Menu.Item>
           <a href="#" onClick={this.reload}>
             <i className={`${styles.menuIcon} icmn-spinner11`} />
-            Refresh
+            <FormattedMessage id="topBar.profileMenu.refresh" />
           </a>
         </Menu.Item>
         <Menu.Divider />

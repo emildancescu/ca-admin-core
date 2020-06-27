@@ -5,8 +5,16 @@ const STORED_SETTINGS = storedSettings => {
   const settings = {}
   Object.keys(storedSettings).forEach(key => {
     const item = store.get(`app.settings.${key}`)
+
     settings[key] = typeof item !== 'undefined' ? item : storedSettings[key]
+
+    if (key === 'locale' && settings[key].length > 2) {
+      // prevent issue with stored locale settings in the form of: en-US,
+      // after switching to the simplified form (en)
+      settings.locale = storedSettings.locale
+    }
   })
+
   return settings
 }
 
@@ -22,7 +30,7 @@ const initialState = {
     isSquaredBorders: false,
     isFixedWidth: false,
     isMenuShadow: false,
-    locale: 'en-US',
+    locale: 'en',
   }),
 }
 
