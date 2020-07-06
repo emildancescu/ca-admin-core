@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card } from 'antd'
 import { Helmet } from 'react-helmet'
+import { FormattedMessage } from 'react-intl'
 import { Form } from 'lib'
 
 class Dashboard extends React.Component {
@@ -42,7 +43,14 @@ class Dashboard extends React.Component {
 
         <Card title={<strong>DASHBOARD</strong>}>Welcome!</Card>
 
-        <Card title={<strong>FORM EXAMPLE</strong>} className="mt-4">
+        <Card
+          title={
+            <strong className="text-uppercase">
+              <FormattedMessage id="dashboard.form.title" defaultMessage="Example form" />
+            </strong>
+          }
+          className="mt-4"
+        >
           <Form config={config} onSubmit={this.onSubmit} />
         </Card>
       </>

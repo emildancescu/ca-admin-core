@@ -97,6 +97,18 @@ const getMenu = modules => {
   }
 }
 
+const getLocales = modules => {
+  const locales = []
+
+  modules.forEach(module => {
+    if (module.locales) {
+      locales.push(module.locales)
+    }
+  })
+
+  return locales
+}
+
 export default class Admin extends Component {
   constructor(props) {
     super(props)
@@ -111,7 +123,7 @@ export default class Admin extends Component {
 
     return (
       <Provider store={createAdminStore(this.modules)}>
-        <Localization>
+        <Localization locales={getLocales(this.modules)}>
           <Router
             history={history}
             routes={getRoutes(this.modules)}

@@ -1,5 +1,8 @@
 import { Loadable } from 'lib'
 
+import en from './locales/en'
+import ro from './locales/ro'
+
 export default {
   name: 'dashboard',
   menu: [
@@ -17,4 +20,8 @@ export default {
       exact: true,
     },
   ],
+  locales: {
+    ro,
+    en,
+  },
 }
