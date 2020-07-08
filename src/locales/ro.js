@@ -1,5 +1,4 @@
-import antdData from 'antd/lib/locale-provider/en_US'
-import localeData from 'react-intl/locale-data/ro'
+import antdData from 'antd/lib/locale-provider/ro_RO'
 
 const messages = {
   'topBar.profileMenu.hello': 'Salut',
@@ -13,6 +12,5 @@ const messages = {
 export default {
   locale: 'ro',
   antdData,
-  localeData,
   messages,
 }
