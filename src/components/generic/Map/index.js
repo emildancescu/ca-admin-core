@@ -6,7 +6,7 @@ import AntPath from 'react-leaflet-ant-path'
 
 export default class LeafletMap extends React.Component {
   render() {
-    const { position, center, polyline, useAntPath, ...rest } = this.props
+    const { position, center, polyline, useAntPath, children, ...rest } = this.props
     let gmapUrl
     let wazeUrl
 
@@ -47,6 +47,8 @@ export default class LeafletMap extends React.Component {
         {polyline && polyline.length > 1 && useAntPath && (
           <AntPath positions={polyline} options={antOptions} />
         )}
+
+        {children}
       </Map>
     )
   }
