@@ -1,3 +1,5 @@
+import store from 'store'
+
 function toQueryString(params, nesting = '') {
   return Object.entries(params)
     .filter(([k, v]) => k && v !== null)
@@ -20,9 +22,12 @@ export function api(options) {
   const { params, method = 'GET', token = '' } = options
   let { url, headers } = options
 
+  const lang = store.get('app.settings.locale') || 'en'
+
   headers = {
     Accept: 'application/json',
     Authorization: `Bearer ${token}`,
+    'Accept-Language': lang,
     ...headers,
   }
 
