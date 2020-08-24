@@ -3,7 +3,6 @@ import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-// we need acces to the dispatch prop
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
   state = {
@@ -17,6 +16,8 @@ class DataTable extends React.Component {
   componentDidMount() {
     // perform initial load
     this.load()
+    const { columns } = this.props
+    this.processColumns(columns)
   }
 
   componentDidUpdate(prevProps) {
@@ -50,8 +51,8 @@ class DataTable extends React.Component {
     // if extra load action params were set as a prop, merge with those as well
     if (loadActionPayload) {
       params = {
-        ...params,
         ...loadActionPayload,
+        ...params,
       }
     }
 
@@ -81,6 +82,7 @@ class DataTable extends React.Component {
     }
 
     // only store sorter if it's non empty, otherwise the API might fail
+    // ********** CRISTI -> sorter is NEVER empty :)
     if (sorter.field) {
       params = {
         ...params,
@@ -168,8 +170,10 @@ class DataTable extends React.Component {
 
     this.columns = this.columns.map(column => {
       if (!sorter) {
-        column.sortOrder = null
-      } else if (column.dataIndex === sorter.field) {
+        delete column.sortOrder
+      }
+
+      if (sorter && column.dataIndex === sorter.field) {
         column.sortOrder = `${sorter.order.toLowerCase()}end` // ascend / descend
       }
 
@@ -192,6 +196,7 @@ class DataTable extends React.Component {
     const {
       params: { page, limit, search },
     } = this.state
+
     const {
       dataSource: { data, loading, pagination },
       actions,
@@ -199,8 +204,6 @@ class DataTable extends React.Component {
       columns,
       ...rest
     } = this.props
-
-    this.processColumns(columns)
 
     const extra = (
       <Row type="flex" justify="space-between">
