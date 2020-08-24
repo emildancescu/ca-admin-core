@@ -13,6 +13,7 @@ import moment from 'moment'
 import QRScanner from 'components/generic/QRScanner'
 import countries from './countries.json'
 import './style.css'
+import RemoteSelect from './remoteSelect'
 
 const formItemLayout = {
   labelCol: { md: 8 },
@@ -53,6 +54,9 @@ class Form extends React.Component {
       form: { getFieldsValue, setFieldsValue },
       onChange,
     } = this.props
+
+    // onChange is always undefined if not set on <Form> component
+    // Can be boolean to update this form internal state with field values
 
     if (onChange) {
       // handle state update delays
@@ -135,9 +139,13 @@ class Form extends React.Component {
   }
 
   getItem = itemConfig => {
-    const { field, type, placeholder, disabled, ...rest } = itemConfig
+    const { field, type, placeholder, disabled, remoteSearch, ...rest } = itemConfig
+
+    const { form } = this.props
 
     switch (type) {
+      case 'remoteSelect':
+        return <RemoteSelect {...remoteSearch} form={form} field={field} />
       case 'select':
       case 'tags':
       case 'multiple':
@@ -243,8 +251,7 @@ class Form extends React.Component {
   }
 
   render() {
-    const { loading, submitText, compact } = this.props
-    const { layout, submitType } = this.props
+    const { loading, submitText, compact, layout, submitType } = this.props
     let { config } = this.props
     let itemLayout
     let tailLayout
