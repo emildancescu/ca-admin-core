@@ -222,10 +222,20 @@ class Form extends React.Component {
 
     // set field values, based on values array
     // note: initialValue will be overridden
-    if (values && values[field]) {
-      initialValue = values[field]
+    if (values) {
+      if (field.includes('.')) {
+        // Try to get nested values assuming dot notation
+        let currentValue = values
+        const fieldArray = field.split('.')
 
-      // try and parse moment date
+        while (fieldArray.length > 0) {
+          currentValue = currentValue[fieldArray[0]]
+          initialValue = currentValue
+          fieldArray.shift()
+        }
+      } else {
+        initialValue = values[field]
+      }
       if (type === 'date') {
         initialValue = moment(initialValue)
       }
