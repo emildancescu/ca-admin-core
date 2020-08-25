@@ -145,7 +145,7 @@ class Form extends React.Component {
 
     switch (type) {
       case 'remoteSelect':
-        return <RemoteSelect {...remoteSearch} form={form} field={field} />
+        return <RemoteSelect remoteSearch={remoteSearch} form={form} field={field} />
       case 'select':
       case 'tags':
       case 'multiple':

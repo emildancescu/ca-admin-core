@@ -4,10 +4,40 @@ import debounce from 'lodash/debounce'
 
 const { Option } = Select
 
+/* Props explaining:
+
+remoteSearch: {
+  filterOption: false, 
+      // From Antd
+  mode: "multiple", 
+      // From Antd
+  {...rest}  
+      // Can contain ANTD Select props from documentation
+  paramSearchQuery: 'search', 
+      **REQUIRED** The actual query for URL 
+  apiFn(params), 
+      **REQUIRED** Should return an array of desired values. Can use fetch, axios etc ...
+}
+
+apiFn example : 
+.then(response => response.json())
+.then(body => {
+  // OBJECT with text - value
+  result = body.data.map(user => ({
+    text: `${user.first_name} ${user.last_name}`,
+    value: user.id,
+  }));
+
+  // ARRAY as desired form
+  result = body.data.map(user => user.first_name);
+});
+
+*/
+
 class RemoteSelect extends React.Component {
   constructor(props) {
     super(props)
-    this.fetchUser = debounce(this.fetchUser, 800)
+    this.fetchData = debounce(this.fetchData, 800)
   }
 
   state = {
@@ -16,7 +46,7 @@ class RemoteSelect extends React.Component {
     fetching: false,
   }
 
-  fetchUser = async value => {
+  fetchData = async value => {
     // No need to call API search without value
     if (!value) {
       return
@@ -24,7 +54,9 @@ class RemoteSelect extends React.Component {
 
     this.setState({ data: [], fetching: true })
 
-    const { apiFn, paramSearchQuery } = this.props
+    const {
+      remoteSearch: { apiFn, paramSearchQuery },
+    } = this.props
 
     const params = {}
     params[paramSearchQuery] = value
@@ -51,22 +83,26 @@ class RemoteSelect extends React.Component {
   render() {
     const { fetching, data, value } = this.state
 
+    const {
+      remoteSearch: { apiFn, paramSearchQuery, ...rest },
+    } = this.props
+
     return (
       <Select
-        mode="multiple"
-        // labelInValue
+        {...rest}
+        // DO NOT modify below default props
+        showSearch
         initialValue={value}
-        placeholder="Select users"
-        notFoundContent={fetching ? <Spin size="small" /> : null}
-        filterOption={false}
-        onSearch={this.fetchUser}
+        onSearch={this.fetchData}
         onChange={this.handleChange}
-        style={{ width: '100%' }}
+        notFoundContent={fetching ? <Spin size="small" /> : null}
       >
         {data.map(d => {
+          const isString = typeof d === 'string'
+
           return (
-            <Option key={d} value={d.value}>
-              {d.text}
+            <Option key={d} value={isString ? d : d.value} title={isString ? d : d.text}>
+              {isString ? d : d.text}
             </Option>
           )
         })}
