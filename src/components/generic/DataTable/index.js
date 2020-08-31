@@ -51,8 +51,8 @@ class DataTable extends React.Component {
     // if extra load action params were set as a prop, merge with those as well
     if (loadActionPayload) {
       params = {
-        ...loadActionPayload,
         ...params,
+        ...loadActionPayload,
       }
     }
 

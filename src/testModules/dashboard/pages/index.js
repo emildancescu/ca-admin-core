@@ -3,6 +3,7 @@ import { Card } from 'antd'
 import { Helmet } from 'react-helmet'
 import { FormattedMessage } from 'react-intl'
 import { Form } from 'lib'
+import TableFix from './tableSortFix'
 
 class Dashboard extends React.Component {
   onSubmit = values => {
@@ -52,6 +53,7 @@ class Dashboard extends React.Component {
           className="mt-4"
         >
           <Form config={config} onSubmit={this.onSubmit} />
+          <TableFix />
         </Card>
       </>
     )

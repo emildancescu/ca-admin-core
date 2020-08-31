@@ -3,6 +3,9 @@ import { Loadable } from 'lib'
 import en from './locales/en'
 import ro from './locales/ro'
 
+import users from './list/reducers'
+import usersSaga from './list/sagas'
+
 export default {
   name: 'dashboard',
   menu: [
@@ -24,4 +27,8 @@ export default {
     ro,
     en,
   },
+  reducers: {
+    users,
+  },
+  sagas: [usersSaga()],
 }
