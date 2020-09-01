@@ -16,8 +16,8 @@ class DataTable extends React.Component {
   componentDidMount() {
     // perform initial load
     this.load()
-    const { columns } = this.props
-    this.processColumns(columns)
+    // const { columns } = this.props
+    // this.processColumns(columns)
   }
 
   componentDidUpdate(prevProps) {
@@ -82,14 +82,19 @@ class DataTable extends React.Component {
     }
 
     // only store sorter if it's non empty, otherwise the API might fail
-    // ********** CRISTI -> sorter is NEVER empty :)
     if (sorter.field) {
       params = {
         ...params,
         sorter: {
           field: sorter.field,
-          order: sorter.order === 'ascend' ? 'ASC' : 'DESC',
+          order: undefined,
         },
+      }
+
+      if (sorter.order) {
+        params.sorter.order = sorter.order === 'ascend' ? 'ASC' : 'DESC'
+      } else {
+        delete params.sorter
       }
     }
 
@@ -163,14 +168,14 @@ class DataTable extends React.Component {
     const { filters: propFilters, isMobileView } = this.props
 
     // filter out columns that should be hidden on mobile
-    this.columns = isMobileView ? columns.filter(column => column.mobile !== false) : columns
+    columns = isMobileView ? columns.filter(column => column.mobile !== false) : columns
 
     // filter columns based on hidden prop
-    this.columns = this.columns.filter(column => column.hidden !== true)
+    columns = columns.filter(column => column.hidden !== true)
 
-    this.columns = this.columns.map(column => {
+    columns = columns.map(column => {
       if (!sorter) {
-        delete column.sortOrder
+        column.sortOrder = false
       }
 
       if (sorter && column.dataIndex === sorter.field) {
@@ -190,6 +195,7 @@ class DataTable extends React.Component {
 
       return column
     })
+    return columns
   }
 
   render() {
@@ -230,14 +236,17 @@ class DataTable extends React.Component {
       </Row>
     )
 
+    const columnsProc = this.processColumns(columns)
+
     return (
       <div>
         {extra}
 
         <Table
+          key={columns.length}
           rowKey="id"
           className="utils__scrollTable"
-          columns={this.columns}
+          columns={columnsProc}
           dataSource={data}
           onChange={this.handleTableChange}
           loading={loading}
