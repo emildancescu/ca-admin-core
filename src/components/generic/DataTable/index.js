@@ -3,7 +3,6 @@ import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
-// we need acces to the dispatch prop
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
   state = {
@@ -81,7 +80,7 @@ class DataTable extends React.Component {
     }
 
     // only store sorter if it's non empty, otherwise the API might fail
-    if (sorter.field) {
+    if (sorter.field && sorter.order) {
       params = {
         ...params,
         sorter: {
@@ -161,15 +160,19 @@ class DataTable extends React.Component {
     const { filters: propFilters, isMobileView } = this.props
 
     // filter out columns that should be hidden on mobile
-    this.columns = isMobileView ? columns.filter(column => column.mobile !== false) : columns
+    let processedColumns = isMobileView
+      ? columns.filter(column => column.mobile !== false)
+      : columns
 
     // filter columns based on hidden prop
-    this.columns = this.columns.filter(column => column.hidden !== true)
+    processedColumns = processedColumns.filter(column => column.hidden !== true)
 
-    this.columns = this.columns.map(column => {
+    processedColumns = processedColumns.map(column => {
       if (!sorter) {
-        column.sortOrder = null
-      } else if (column.dataIndex === sorter.field) {
+        column.sortOrder = false
+      }
+
+      if (sorter && column.dataIndex === sorter.field) {
         column.sortOrder = `${sorter.order.toLowerCase()}end` // ascend / descend
       }
 
@@ -186,12 +189,15 @@ class DataTable extends React.Component {
 
       return column
     })
+
+    return processedColumns
   }
 
   render() {
     const {
       params: { page, limit, search },
     } = this.state
+
     const {
       dataSource: { data, loading, pagination },
       actions,
@@ -199,8 +205,6 @@ class DataTable extends React.Component {
       columns,
       ...rest
     } = this.props
-
-    this.processColumns(columns)
 
     const extra = (
       <Row type="flex" justify="space-between">
@@ -227,14 +231,17 @@ class DataTable extends React.Component {
       </Row>
     )
 
+    const processedColumns = this.processColumns(columns)
+
     return (
       <div>
         {extra}
 
         <Table
+          key={columns.length}
           rowKey="id"
           className="utils__scrollTable"
-          columns={this.columns}
+          columns={processedColumns}
           dataSource={data}
           onChange={this.handleTableChange}
           loading={loading}
