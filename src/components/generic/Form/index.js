@@ -76,6 +76,8 @@ class Form extends React.Component {
         setFieldsValue({
           [field]: data,
         })
+        // manually trigger on change after scan
+        this.handleOnChange(field)
       }
     }
 
@@ -158,13 +160,28 @@ class Form extends React.Component {
             placeholder={placeholder}
             disabled={disabled}
             addonBefore={this.getPrefixSelector()}
+            onChange={() => this.handleOnChange(field)}
             {...rest}
           />
         )
       case 'date':
-        return <DatePicker placeholder={placeholder} disabled={disabled} {...rest} />
+        return (
+          <DatePicker
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={() => this.handleOnChange(field)}
+            {...rest}
+          />
+        )
       case 'number':
-        return <InputNumber placeholder={placeholder} disabled={disabled} {...rest} />
+        return (
+          <InputNumber
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={() => this.handleOnChange(field)}
+            {...rest}
+          />
+        )
       case 'qrcode':
         return (
           <Input
@@ -172,6 +189,7 @@ class Form extends React.Component {
             disabled={disabled}
             addonAfter={this.getQRScanner(field)}
             className="ant-input-search-enter-button"
+            onChange={() => this.handleOnChange(field)}
             {...rest}
           />
         )
@@ -261,7 +279,7 @@ class Form extends React.Component {
   }
 
   render() {
-    const { loading, submitText, compact, layout, submitType } = this.props
+    const { loading, submitText, compact, layout, submitType, children, ...rest } = this.props
     let { config } = this.props
     let itemLayout
     let tailLayout
@@ -281,8 +299,10 @@ class Form extends React.Component {
         onSubmit={this.handleSubmit}
         layout={layout}
         className={layout !== 'inline' && 'mb-4'}
+        {...rest}
       >
         {config.map(itemConfig => this.getFormItem(itemConfig))}
+        {children}
 
         <AntForm.Item {...tailLayout}>
           <Button type={submitType || 'primary'} htmlType="submit" loading={loading}>

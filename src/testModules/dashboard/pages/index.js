@@ -10,12 +10,22 @@ class Dashboard extends React.Component {
     console.log(values)
   }
 
+  onChange = (field, values) => {
+    console.log('changed value', field, values[field])
+  }
+
   render() {
     const config = [
       {
         label: 'Input',
         field: 'input1',
         placeholder: 'Input text',
+      },
+      {
+        label: 'QR Scanner',
+        field: 'scan1',
+        type: 'qrcode',
+        placeholder: 'Scan QR',
       },
       {
         label: 'Select',
@@ -52,7 +62,7 @@ class Dashboard extends React.Component {
           }
           className="mt-4"
         >
-          <Form config={config} onSubmit={this.onSubmit} />
+          <Form config={config} onSubmit={this.onSubmit} onChange={this.onChange} />
           <TableFix />
         </Card>
       </>
