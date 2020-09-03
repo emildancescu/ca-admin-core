@@ -1,6 +1,6 @@
 {
   "name": "ca-admin-core",
-  "version": "1.0.5",
+  "version": "1.0.4",
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
