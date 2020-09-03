@@ -18,25 +18,31 @@ class Dashboard extends React.Component {
     const config = [
       {
         label: 'Input',
-        field: 'input1',
+        field: 'input',
         placeholder: 'Input text',
       },
       {
+        label: 'Date',
+        field: 'date',
+        type: 'date',
+        placeholder: 'Select date',
+      },
+      {
         label: 'QR Scanner',
-        field: 'scan1',
+        field: 'scan',
         type: 'qrcode',
         placeholder: 'Scan QR',
       },
       {
         label: 'Select',
-        field: 'select1',
+        field: 'select',
         type: 'select',
         placeholder: '- select option -',
         options: ['Option 1', 'Option 2'],
       },
       {
         label: 'File',
-        field: 'file1',
+        field: 'file',
         type: 'file',
         placeholder: 'Select file',
         action: 'http://conceptapps.ddns.net:3001/upload',

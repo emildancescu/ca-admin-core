@@ -55,9 +55,6 @@ class Form extends React.Component {
       onChange,
     } = this.props
 
-    // onChange is always undefined if not set on <Form> component
-    // Can be boolean to update this form internal state with field values
-
     if (onChange) {
       // handle state update delays
       setTimeout(() => {
@@ -133,7 +130,6 @@ class Form extends React.Component {
   }
 
   fileUploadEvent = e => {
-    // console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e
     }
@@ -279,7 +275,7 @@ class Form extends React.Component {
   }
 
   render() {
-    const { loading, submitText, compact, layout, submitType, children, ...rest } = this.props
+    const { loading, submitText, compact, layout, submitType, children } = this.props
     let { config } = this.props
     let itemLayout
     let tailLayout
@@ -299,7 +295,6 @@ class Form extends React.Component {
         onSubmit={this.handleSubmit}
         layout={layout}
         className={layout !== 'inline' && 'mb-4'}
-        {...rest}
       >
         {config.map(itemConfig => this.getFormItem(itemConfig))}
         {children}
