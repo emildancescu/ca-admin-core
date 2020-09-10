@@ -67,11 +67,17 @@ class RemoteSelect extends React.Component {
   }
 
   handleChange = value => {
-    const { form, field } = this.props
+    const {
+      // form,
+      // field,
+      onChange,
+    } = this.props
 
-    const { setFieldsValue } = form
+    // const { setFieldsValue } = form
 
-    setFieldsValue({ [field]: value })
+    onChange(value)
+
+    // setFieldsValue({ [field]: value })
 
     this.setState({
       value,
