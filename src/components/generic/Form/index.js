@@ -251,7 +251,7 @@ class Form extends React.Component {
 
     // set field values, based on values array
     // note: initialValue will be overridden
-    if (values) {
+    if (values && values[field]) {
       if (field.includes('.')) {
         // Try to get nested values assuming dot notation
         let currentValue = values
@@ -265,6 +265,7 @@ class Form extends React.Component {
       } else {
         initialValue = values[field]
       }
+
       if (type === 'date') {
         initialValue = moment(initialValue)
       }
