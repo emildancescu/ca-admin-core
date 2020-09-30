@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet'
 import { FormattedMessage } from 'react-intl'
 import { Form } from 'lib'
 import TableFix from './tableSortFix'
+import RemoteSelectUsers from './remoteSelectUsers'
 
 class Dashboard extends React.Component {
   onSubmit = values => {
@@ -68,6 +69,7 @@ class Dashboard extends React.Component {
           }
           className="mt-4"
         >
+          <RemoteSelectUsers className="mb-5" />
           <Form config={config} onSubmit={this.onSubmit} onChange={this.onChange} />
           <TableFix />
         </Card>

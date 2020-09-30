@@ -137,20 +137,11 @@ class Form extends React.Component {
   }
 
   getItem = itemConfig => {
-    const { field, type, placeholder, disabled, remoteSearch, ...rest } = itemConfig
-
-    const { form } = this.props
+    const { field, type, placeholder, disabled, ...rest } = itemConfig
 
     switch (type) {
       case 'remoteSelect':
-        return (
-          <RemoteSelect
-            onChange={() => this.handleOnChange(field)}
-            remoteSearch={remoteSearch}
-            form={form}
-            field={field}
-          />
-        )
+        return <RemoteSelect onChange={() => this.handleOnChange(field)} itemConfig={itemConfig} />
       case 'select':
       case 'tags':
       case 'multiple':

@@ -37,13 +37,19 @@ apiFn example :
 class RemoteSelect extends React.Component {
   constructor(props) {
     super(props)
-    this.fetchData = debounce(this.fetchData, 800)
-  }
+    const {
+      itemConfig: { options },
+    } = this.props
 
-  state = {
-    data: [],
-    value: [],
-    fetching: false,
+    this.fetchData = debounce(this.fetchData, 800)
+
+    this.state = {
+      data: [],
+      // eslint-disable-next-line react/no-unused-state
+      value: [],
+      fetching: false,
+      preOptions: options || [],
+    }
   }
 
   fetchData = async value => {
@@ -55,7 +61,9 @@ class RemoteSelect extends React.Component {
     this.setState({ data: [], fetching: true })
 
     const {
-      remoteSearch: { apiFn, paramSearchQuery },
+      itemConfig: {
+        remoteSearch: { apiFn, paramSearchQuery },
+      },
     } = this.props
 
     const params = {}
@@ -66,44 +74,69 @@ class RemoteSelect extends React.Component {
     this.setState({ data, fetching: false })
   }
 
-  handleChange = value => {
+  handleChange = (value, option) => {
     const {
-      // form,
-      // field,
       onChange,
+      itemConfig: {
+        remoteSearch: { mode },
+      },
     } = this.props
-
-    // const { setFieldsValue } = form
 
     onChange(value)
 
-    // setFieldsValue({ [field]: value })
+    let preOptionsValue = []
+
+    if (mode === 'multiple') {
+      preOptionsValue = option.map(el => {
+        return {
+          text: el.props.title,
+          value: el.props.value,
+        }
+      })
+    } else if (option) {
+      preOptionsValue.push({
+        text: option.props.title,
+        value: option.props.value,
+      })
+    }
 
     this.setState({
+      // eslint-disable-next-line react/no-unused-state
       value,
       data: [],
       fetching: false,
+      preOptions: preOptionsValue,
     })
   }
 
   render() {
-    const { fetching, data, value } = this.state
+    const { fetching, data, preOptions } = this.state
 
     const {
-      remoteSearch: { apiFn, paramSearchQuery, ...rest },
+      itemConfig: {
+        remoteSearch: { apiFn, paramSearchQuery, ...restRS },
+      },
+      // pass value from Form's getFieldDecorator() to <Select>
+      ...restProps
     } = this.props
+
+    const dataFiltered = data.filter(x => !preOptions.some(y => y.value === x.value))
+
+    const newData = dataFiltered.concat(preOptions)
 
     return (
       <Select
-        {...rest}
+        {...restRS}
         // DO NOT modify below default props
+        {...restProps}
         showSearch
-        initialValue={value}
+        allowClear
         onSearch={this.fetchData}
+        onFocus={() => this.fetchData(' ')}
         onChange={this.handleChange}
         notFoundContent={fetching ? <Spin size="small" /> : null}
       >
-        {data.map(d => {
+        {newData.map(d => {
           const isString = typeof d === 'string'
 
           return (
