@@ -22,6 +22,12 @@ export default {
       component: Loadable(() => import('./pages')),
       exact: true,
     },
+    {
+      path: '/modalJumpTab',
+      component: Loadable(() => import('./pages/modalJumpTab')),
+      exact: true,
+      modal: true,
+    },
   ],
   locales: {
     ro,

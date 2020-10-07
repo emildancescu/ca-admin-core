@@ -45,7 +45,8 @@ class DetailsModal extends React.Component {
       titleComponent,
       children,
       tabs,
-      location: { state: { selectedTab } = {} },
+      location: { hash, state: { selectedTab } = {} },
+      history,
     } = this.props
 
     const tabTitle = (icon, title) => (
@@ -54,6 +55,14 @@ class DetailsModal extends React.Component {
         {isMobileView ? '' : ` ${title}`}
       </span>
     )
+
+    let defaultActiveKey = ''
+
+    if (hash !== '') {
+      defaultActiveKey = hash.replace('#', '')
+    } else {
+      defaultActiveKey = selectedTab
+    }
 
     return (
       <div>
@@ -72,9 +81,18 @@ class DetailsModal extends React.Component {
           footer={null}
         >
           {tabs && (
-            <Tabs type={isMobileView ? 'card' : 'line'} defaultActiveKey={selectedTab}>
+            <Tabs
+              onTabClick={key => {
+                history.replace({ hash: key, state: { modal: true } })
+              }}
+              type={isMobileView ? 'card' : 'line'}
+              defaultActiveKey={defaultActiveKey}
+            >
               {tabs.map(tab => (
-                <TabPane tab={tabTitle(tab.icon, tab.title)} key={tab.title}>
+                <TabPane
+                  tab={tabTitle(tab.icon, tab.title)}
+                  key={tab.key || tab.title.toLowerCase()}
+                >
                   {tab.component}
                 </TabPane>
               ))}
