@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { Form } from 'lib'
 import { Link } from 'react-router-dom'
 import TableFix from './tableSortFix'
+import RemoteSelectUsers from './remoteSelectUsers'
 
 class Dashboard extends React.Component {
   onSubmit = values => {
@@ -69,6 +70,19 @@ class Dashboard extends React.Component {
           }
           className="mt-4"
         >
+          <Form
+            config={config}
+            onSubmit={this.onSubmit}
+            onChange={this.onChange}
+            values={{ input: null }}
+          />
+        </Card>
+
+        <Card className="mt-4" title={<strong className="text-uppercase">Remote select</strong>}>
+          <RemoteSelectUsers />
+        </Card>
+
+        <Card className="mt-4 mb-4" title={<strong className="text-uppercase">Modals</strong>}>
           <div className="mb-5" style={{ textAlign: 'center' }}>
             <Link
               to={{ pathname: `/modalJumpTab`, state: { modal: true } }}
@@ -84,9 +98,9 @@ class Dashboard extends React.Component {
               modalJumpTab with state
             </Link>
           </div>
-          <Form config={config} onSubmit={this.onSubmit} onChange={this.onChange} />
-          <TableFix />
         </Card>
+
+        <TableFix />
       </>
     )
   }

@@ -137,20 +137,11 @@ class Form extends React.Component {
   }
 
   getItem = itemConfig => {
-    const { field, type, placeholder, disabled, remoteSearch, ...rest } = itemConfig
-
-    const { form } = this.props
+    const { field, type, placeholder, disabled, ...rest } = itemConfig
 
     switch (type) {
       case 'remoteSelect':
-        return (
-          <RemoteSelect
-            onChange={() => this.handleOnChange(field)}
-            remoteSearch={remoteSearch}
-            form={form}
-            field={field}
-          />
-        )
+        return <RemoteSelect onChange={() => this.handleOnChange(field)} itemConfig={itemConfig} />
       case 'select':
       case 'tags':
       case 'multiple':
@@ -251,32 +242,34 @@ class Form extends React.Component {
 
     // set field values, based on values array
     // note: initialValue will be overridden
-    if (values && values[field]) {
+    if (values) {
       if (field.includes('.')) {
-        // Try to get nested values assuming dot notation
+        // try to get nested values assuming dot notation
         let currentValue = values
         const fieldArray = field.split('.')
 
         while (fieldArray.length > 0) {
           currentValue = currentValue[fieldArray[0]]
-          initialValue = currentValue
           fieldArray.shift()
         }
-      } else {
+
+        if (currentValue) {
+          initialValue = currentValue
+        }
+      } else if (values[field]) {
         initialValue = values[field]
       }
 
-      if (type === 'date') {
+      if (type === 'date' && initialValue) {
         initialValue = moment(initialValue)
       }
     }
 
+    const fieldDecoratorOptions = { rules, initialValue, ...extraProps }
+
     return (
       <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>
-        {!items &&
-          getFieldDecorator(field, { rules, initialValue, ...extraProps })(
-            this.getItem(itemConfig),
-          )}
+        {!items && getFieldDecorator(field, fieldDecoratorOptions)(this.getItem(itemConfig))}
         {items && items.map(subItemConfig => this.getFormItem(subItemConfig, true))}
       </AntForm.Item>
     )

@@ -16,7 +16,7 @@ class ModalJumpTab extends React.Component {
         title: 'Edit Tab',
         icon: 'idcard',
         component: <EditTab />,
-        // key: 'edit',
+        key: 'edit',
       },
     ]
 
