@@ -14,6 +14,7 @@ export default {
       key: 'dashboard',
       url: '/dashboard',
       icon: 'icmn icmn-home',
+      roles: ['admin'],
     },
   ],
   routes: [

@@ -10,7 +10,8 @@ import styles from './style.module.scss'
 const { Sider } = Layout
 const { SubMenu, Divider } = Menu
 
-const mapStateToProps = ({ menu, settings }) => ({
+const mapStateToProps = ({ menu, settings, user }) => ({
+  user,
   badges: menu.badges,
   isMenuCollapsed: settings.isMenuCollapsed,
   isMobileView: settings.isMobileView,
@@ -104,12 +105,24 @@ class MenuLeft extends React.Component {
   }
 
   generateMenuItems = () => {
-    const { menu = [], badges } = this.props
+    const {
+      menu = [],
+      badges,
+      user: { roles: userRoles },
+    } = this.props
+
+    const isAuthorized = roles => {
+      // intersection of roles and userRoles must have at least one element
+      return _.intersection(roles, userRoles).length > 0 || roles.length === 0
+    }
+
     const generateItem = item => {
       const { key, title, url, icon, disabled, badge } = item
+
       if (item.divider) {
         return <Divider key={Math.random()} />
       }
+
       if (item.url) {
         return (
           <Menu.Item key={key} disabled={disabled}>
@@ -150,38 +163,29 @@ class MenuLeft extends React.Component {
 
     const generateSubmenu = items =>
       items.map(menuItem => {
-        if (menuItem.children) {
+        const { title, icon, key, children, roles = [] } = menuItem
+
+        if (!isAuthorized(roles)) {
+          return null
+        }
+
+        if (children) {
           const subMenuTitle = (
-            <span key={menuItem.key}>
-              <span className={styles.title}>{menuItem.title}</span>
-              {menuItem.icon && <span className={`${menuItem.icon} ${styles.icon}`} />}
+            <span key={key}>
+              <span className={styles.title}>{title}</span>
+              {icon && <span className={`${icon} ${styles.icon}`} />}
             </span>
           )
           return (
-            <SubMenu title={subMenuTitle} key={menuItem.key}>
-              {generateSubmenu(menuItem.children)}
+            <SubMenu title={subMenuTitle} key={key}>
+              {generateSubmenu(children)}
             </SubMenu>
           )
         }
         return generateItem(menuItem)
       })
 
-    return menu.map(menuItem => {
-      if (menuItem.children) {
-        const subMenuTitle = (
-          <span key={menuItem.key}>
-            <span className={styles.title}>{menuItem.title}</span>
-            {menuItem.icon && <span className={`${menuItem.icon} ${styles.icon}`} />}
-          </span>
-        )
-        return (
-          <SubMenu title={subMenuTitle} key={menuItem.key}>
-            {generateSubmenu(menuItem.children)}
-          </SubMenu>
-        )
-      }
-      return generateItem(menuItem)
-    })
+    return generateSubmenu(menu)
   }
 
   render() {
