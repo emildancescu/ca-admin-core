@@ -3,6 +3,7 @@ import { Card } from 'antd'
 import { Helmet } from 'react-helmet'
 import { FormattedMessage } from 'react-intl'
 import { Form } from 'lib'
+import { Link } from 'react-router-dom'
 import TableFix from './tableSortFix'
 
 class Dashboard extends React.Component {
@@ -68,6 +69,21 @@ class Dashboard extends React.Component {
           }
           className="mt-4"
         >
+          <div className="mb-5" style={{ textAlign: 'center' }}>
+            <Link
+              to={{ pathname: `/modalJumpTab`, state: { modal: true } }}
+              className="utils__link--underlined"
+            >
+              modalJumpTab simple
+            </Link>
+            <br />
+            <Link
+              to={{ pathname: `/modalJumpTab`, state: { modal: true, selectedTab: 'edit' } }}
+              className="utils__link--underlined"
+            >
+              modalJumpTab with state
+            </Link>
+          </div>
           <Form config={config} onSubmit={this.onSubmit} onChange={this.onChange} />
           <TableFix />
         </Card>
