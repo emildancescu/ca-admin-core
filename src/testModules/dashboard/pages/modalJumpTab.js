@@ -27,11 +27,11 @@ class ModalJumpTab extends React.Component {
 }
 
 const DetailsTab = () => {
-  return <>Detaiiiiiiiiiiiiiillllllllllsssssssssssss</>
+  return <>Details</>
 }
 
 const EditTab = () => {
-  return <>EDITTTTTTTTTTTTTTTTTTTTTTTTTttttttttt</>
+  return <>Edit</>
 }
 
 export default ModalJumpTab
