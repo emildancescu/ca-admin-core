@@ -242,39 +242,21 @@ class Form extends React.Component {
 
     // set field values, based on values array
     // note: initialValue will be overridden
-    // if (values && values[field]) {
-    //   if (field.includes('.')) {
-    //     // Try to get nested values assuming dot notation
-    //     let currentValue = values
-    //     const fieldArray = field.split('.')
-
-    //     while (fieldArray.length > 0) {
-    //       currentValue = currentValue[fieldArray[0]]
-    //       initialValue = currentValue
-    //       fieldArray.shift()
-    //     }
-    //   } else {
-    //     initialValue = values[field]
-    //   }
-
-    //   if (type === 'date') {
-    //     initialValue = moment(initialValue)
-    //   }
-    // }
-
-    // OTHER APPROACH
-    // Enable : Try to get nested values assuming dot notation
     if (values) {
       if (field.includes('.')) {
+        // try to get nested values assuming dot notation
         let currentValue = values
         const fieldArray = field.split('.')
 
         while (fieldArray.length > 0) {
           currentValue = currentValue[fieldArray[0]]
-          initialValue = currentValue
           fieldArray.shift()
         }
-      } else {
+
+        if (currentValue) {
+          initialValue = currentValue
+        }
+      } else if (values[field]) {
         initialValue = values[field]
       }
 
@@ -283,12 +265,7 @@ class Form extends React.Component {
       }
     }
 
-    // Avoid 'null' values from Submit
-    // Fields are set to 'undefined' by internal form by default
     const fieldDecoratorOptions = { rules, initialValue, ...extraProps }
-    if (!initialValue) {
-      delete fieldDecoratorOptions.initialValue
-    }
 
     return (
       <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>

@@ -70,7 +70,12 @@ class Dashboard extends React.Component {
           className="mt-4"
         >
           <RemoteSelectUsers className="mb-5" />
-          <Form config={config} onSubmit={this.onSubmit} onChange={this.onChange} />
+          <Form
+            config={config}
+            onSubmit={this.onSubmit}
+            onChange={this.onChange}
+            values={{ input: null }}
+          />
           <TableFix />
         </Card>
       </>
