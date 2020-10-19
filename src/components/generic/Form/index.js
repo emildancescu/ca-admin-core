@@ -11,6 +11,7 @@ import {
 } from 'antd'
 import moment from 'moment'
 import QRScanner from 'components/generic/QRScanner'
+import isObject from 'lodash/isObject'
 import countries from './countries.json'
 import './style.css'
 import RemoteSelect from './remoteSelect'
@@ -96,7 +97,7 @@ class Form extends React.Component {
         }
       >
         {options.map(option => {
-          const isString = typeof option === 'string'
+          const isString = !isObject(option)
 
           return (
             <Select.Option key={option} value={isString ? option : option.value}>

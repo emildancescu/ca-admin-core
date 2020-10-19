@@ -21,6 +21,19 @@ const someUsers = [
   },
 ]
 
+const someOptions = [
+  {
+    id: 2,
+    name: 'Non-smoking driver',
+    type: 'driver',
+  },
+  {
+    id: 14,
+    name: 'No conversations',
+    type: 'client',
+  },
+]
+
 const remoteSearchUsersMultiple = {
   filterOption: false,
   mode: 'multiple',
@@ -158,12 +171,11 @@ class RemoteSelectUsers extends React.Component {
 
   render() {
     const implicitValues = {
-      // either with initialValue
       users_multiple: someUsers.map(obj => obj.id),
       users_single: null,
       options: {
-        client: [14],
-        // driver: [4]
+        client: someOptions.filter(el => el.type !== 'driver').map(el => el.id),
+        driver: someOptions.filter(el => el.type !== 'client').map(el => el.id),
       },
       date: null,
     }
@@ -198,12 +210,22 @@ class RemoteSelectUsers extends React.Component {
             field: 'options.client',
             type: 'remoteSelect',
             remoteSearch: remoteSearchCityrideOptionsClient,
+            options: someOptions
+              .filter(el => el.type !== 'driver')
+              .map(el => {
+                return { text: el.name, value: el.id }
+              }),
           },
           {
             label: 'Driver',
             field: 'options.driver',
             type: 'remoteSelect',
             remoteSearch: remoteSearchCityrideOptionsDriver,
+            options: someOptions
+              .filter(el => el.type !== 'client')
+              .map(el => {
+                return { text: el.name, value: el.id }
+              }),
           },
         ],
       },

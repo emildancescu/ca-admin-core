@@ -1,7 +1,8 @@
 import React from 'react'
-import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
+import { Table, Input, Row, Col, Button, Tooltip, Icon } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import RemoteFilter from './remoteFilter'
 
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
@@ -149,6 +150,23 @@ class DataTable extends React.Component {
     this.load()
   }
 
+  remoteFilterConfig = config => ({
+    filterDropdown: ({ setSelectedKeys, confirm }) => (
+      <div style={config.styleColumn ? { ...config.styleColumn } : { padding: 8, width: '200px' }}>
+        <RemoteFilter
+          remoteSearch={config}
+          tableDropdownFn={{
+            setSelectedKeys,
+            confirm,
+          }}
+        />
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+  })
+
   processColumns = columns => {
     // the method aims to hook the columns' sorter and filters to the
     // internal state of our component, so we can easily reset all of them
@@ -185,6 +203,13 @@ class DataTable extends React.Component {
       // if a filter has been set via props, prevent user from changing it
       if (propFilters && propFilters[column.dataIndex]) {
         column.filters = null
+      }
+
+      if (column.remoteFilter) {
+        column = {
+          ...column,
+          ...this.remoteFilterConfig(column.remoteFilter),
+        }
       }
 
       return column

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Select, Spin } from 'antd'
 import debounce from 'lodash/debounce'
+import isObject from 'lodash/isObject'
 
 const { Option } = Select
 
@@ -137,7 +138,7 @@ class RemoteSelect extends React.Component {
         notFoundContent={fetching ? <Spin size="small" /> : null}
       >
         {newData.map(d => {
-          const isString = typeof d === 'string'
+          const isString = !isObject(d)
 
           return (
             <Option key={d} value={isString ? d : d.value} title={isString ? d : d.text}>
