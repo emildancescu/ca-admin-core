@@ -91,7 +91,14 @@ class TableFix extends React.Component {
       {
         title: 'roles',
         dataIndex: 'roles',
-        render: roles => roles.map(el => <Tag key={el}>{el}</Tag>),
+        render: roles => roles.map(role => <Tag key={role}>{role}</Tag>),
+        filters: [
+          { text: 'client', value: 'client' },
+          { text: 'operator', value: 'operator' },
+          { text: 'bike-operator', value: 'bike-operator' },
+          { text: 'fleet-operator', value: 'fleet-operator' },
+          { text: 'admin', value: 'admin' },
+        ],
       },
     ]
   }
