@@ -7,7 +7,7 @@ import { load } from '../list/actions'
 
 @withRouter
 @connect(({ users }) => ({ users }))
-class TableFix extends React.Component {
+class Table extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -25,6 +25,7 @@ class TableFix extends React.Component {
         title: 'Phone',
         dataIndex: 'phone_number',
         sorter: true,
+        hideAddon: true,
       },
       {
         title: 'Roles',
@@ -59,32 +60,35 @@ class TableFix extends React.Component {
         title: 'id',
         dataIndex: 'id',
         sorter: true,
+        hideAddon: true,
       },
       {
         title: 'first_name',
         dataIndex: 'first_name',
         sorter: true,
-        hidden: true,
+        hideAddon: true,
       },
       {
         title: 'last_name',
         dataIndex: 'last_name',
         sorter: true,
+        hideAddon: true,
       },
       {
         title: 'email',
         dataIndex: 'email',
         sorter: true,
+        hideAddon: false,
       },
       ...this.getExtraColumns(view),
     ]
 
     return (
-      <Card title={<strong>TableFixTest</strong>} extra={extra}>
-        <DataTable columns={columns} dataSource={users} loadAction={load} />
+      <Card title={<strong>DataTable</strong>} extra={extra}>
+        <DataTable columns={columns} dataSource={users} loadAction={load} hideColumnsAddon />
       </Card>
     )
   }
 }
 
-export default TableFix
+export default Table

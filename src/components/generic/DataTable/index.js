@@ -2,6 +2,7 @@ import React from 'react'
 import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import TableHideColumns from './tableHideColumns'
 
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
@@ -11,6 +12,7 @@ class DataTable extends React.Component {
       page: 1,
       limit: 25, // default page size
     },
+    addonHideColumns: {},
   }
 
   componentDidMount() {
@@ -155,6 +157,7 @@ class DataTable extends React.Component {
 
     const {
       params: { sorter, filters },
+      addonHideColumns,
     } = this.state
 
     const { filters: propFilters, isMobileView } = this.props
@@ -164,10 +167,40 @@ class DataTable extends React.Component {
       ? columns.filter(column => column.mobile !== false)
       : columns
 
-    // filter columns based on hidden prop
-    processedColumns = processedColumns.filter(column => column.hidden !== true)
-
+    // Set hidden attribute by default
+    // Avoid using 'undefined' type
     processedColumns = processedColumns.map(column => {
+      if (column.hidden === undefined) {
+        column.hidden = false
+      }
+
+      return column
+    })
+
+    // tableHideColumns Addon - Correct hidden attribute by state
+    // Inverse boolean value from Switch component property 'checked'
+    if (Object.keys(addonHideColumns).length > 0) {
+      processedColumns = processedColumns.map(column => {
+        const lookup = column.dataIndex || column.key
+
+        if (addonHideColumns[lookup] !== undefined) {
+          column.hidden = !addonHideColumns[lookup]
+        }
+
+        return column
+      })
+    }
+
+    // Need to make copies of 'processedColumns' to not loose columns
+    // For <Table /> and / or for <TableHideColumns />
+
+    let columnsForHide = [...processedColumns]
+    let columnsForTable = [...processedColumns]
+
+    // Filter and map <Table /> columns based on hidden prop
+    columnsForTable = columnsForTable.filter(column => column.hidden === false)
+
+    columnsForTable = columnsForTable.map(column => {
       if (!sorter) {
         column.sortOrder = false
       }
@@ -190,7 +223,20 @@ class DataTable extends React.Component {
       return column
     })
 
-    return processedColumns
+    // Filter <TableHideColumns /> columns based on hideAddon prop
+    columnsForHide = columnsForHide.filter(el => el.hideAddon === true)
+
+    // Return both arrays of columns
+    return [columnsForHide, columnsForTable]
+  }
+
+  setHiddenColumns = columns => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        addonHideColumns: columns,
+      }
+    })
   }
 
   render() {
@@ -203,8 +249,11 @@ class DataTable extends React.Component {
       actions,
       rowDoubleClick,
       columns,
+      hideColumnsAddon,
       ...rest
     } = this.props
+
+    const [columnsForHide, columnsForTable] = this.processColumns(columns)
 
     const extra = (
       <Row type="flex" justify="space-between">
@@ -218,6 +267,13 @@ class DataTable extends React.Component {
           />
         </Col>
         <Col>
+          {hideColumnsAddon && (
+            <TableHideColumns
+              setHiddenColumns={this.setHiddenColumns}
+              className="mr-2"
+              columns={columnsForHide}
+            />
+          )}
           <Tooltip placement="top" title="Clear all filters">
             <Button icon="stop" className="mb-4" onClick={this.handleClearFilters} />
           </Tooltip>
@@ -231,8 +287,6 @@ class DataTable extends React.Component {
       </Row>
     )
 
-    const processedColumns = this.processColumns(columns)
-
     return (
       <div>
         {extra}
@@ -241,7 +295,7 @@ class DataTable extends React.Component {
           key={columns.length}
           rowKey="id"
           className="utils__scrollTable"
-          columns={processedColumns}
+          columns={columnsForTable}
           dataSource={data}
           onChange={this.handleTableChange}
           loading={loading}
