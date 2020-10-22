@@ -163,7 +163,7 @@ class DataTable extends React.Component {
       </div>
     ),
     filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      <Icon type="filter" theme="filled" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
   })
 
