@@ -25,7 +25,6 @@ class Table extends React.Component {
         title: 'Phone',
         dataIndex: 'phone_number',
         sorter: true,
-        hideAddon: true,
       },
       {
         title: 'Roles',
@@ -60,19 +59,16 @@ class Table extends React.Component {
         title: 'id',
         dataIndex: 'id',
         sorter: true,
-        hideAddon: true,
       },
       {
         title: 'first_name',
         dataIndex: 'first_name',
         sorter: true,
-        hideAddon: true,
       },
       {
         title: 'last_name',
         dataIndex: 'last_name',
         sorter: true,
-        hideAddon: true,
       },
       {
         title: 'email',

@@ -224,7 +224,7 @@ class DataTable extends React.Component {
     })
 
     // Filter <TableHideColumns /> columns based on hideAddon prop
-    columnsForHide = columnsForHide.filter(el => el.hideAddon === true)
+    columnsForHide = columnsForHide.filter(el => el.hideAddon !== false)
 
     // Return both arrays of columns
     return [columnsForHide, columnsForTable]
