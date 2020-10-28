@@ -2,6 +2,7 @@ import React from 'react'
 import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import store from 'store'
 import ColumnSelector from './columnSelector'
 
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
@@ -16,6 +17,26 @@ class DataTable extends React.Component {
   }
 
   componentDidMount() {
+    const { settingsKey } = this.props
+
+    // Check for settingsKey and localStorage settings
+    if (settingsKey) {
+      const tableSettings = store.get(`app.datatable.${settingsKey}`)
+
+      if (tableSettings) {
+        const columnSelectorSettings = tableSettings.columnSelector
+
+        if (columnSelectorSettings && _.isObject(columnSelectorSettings)) {
+          this.setState(prevState => {
+            return {
+              ...prevState,
+              columnSelector: columnSelectorSettings,
+            }
+          })
+        }
+      }
+    }
+
     // perform initial load
     this.load()
   }
@@ -233,11 +254,24 @@ class DataTable extends React.Component {
   }
 
   setColumnSelector = columns => {
+    const { settingsKey } = this.props
+
     this.setState(prevState => {
-      return {
+      const newState = {
         ...prevState,
-        columnSelector: columns,
+        columnSelector: {
+          ...prevState.columnSelector,
+          ...columns,
+        },
       }
+
+      if (settingsKey) {
+        store.set(`app.datatable.${settingsKey}`, {
+          columnSelector: { ...newState.columnSelector },
+        })
+      }
+
+      return newState
     })
   }
 

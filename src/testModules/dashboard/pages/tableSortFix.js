@@ -81,7 +81,13 @@ class Table extends React.Component {
 
     return (
       <Card title={<strong>DataTable</strong>} extra={extra}>
-        <DataTable columns={columns} dataSource={users} loadAction={load} showColumnSelector />
+        <DataTable
+          columns={columns}
+          dataSource={users}
+          loadAction={load}
+          showColumnSelector
+          settingsKey="users"
+        />
       </Card>
     )
   }
