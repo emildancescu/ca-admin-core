@@ -35,8 +35,8 @@ export default class ColumnSelector extends React.Component {
     this.setState(prevState => {
       return {
         switches: {
-          ...colSettings,
           ...prevState.switches,
+          ...colSettings,
         },
       }
     })
