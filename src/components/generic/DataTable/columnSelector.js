@@ -3,7 +3,7 @@ import React from 'react'
 import { Switch, Button, Popover } from 'antd'
 import isEqual from 'lodash/isEqual'
 
-export default class TableHideColumns extends React.Component {
+export default class ColumnSelector extends React.Component {
   state = {
     switches: {},
   }
@@ -43,7 +43,7 @@ export default class TableHideColumns extends React.Component {
   }
 
   handleOnChange = (checked, event, dataIndex) => {
-    const { setHiddenColumns } = this.props
+    const { setColumnSelector } = this.props
 
     this.setState(prevState => {
       const result = {
@@ -51,7 +51,7 @@ export default class TableHideColumns extends React.Component {
         [dataIndex]: checked,
       }
 
-      setHiddenColumns(result)
+      setColumnSelector(result)
 
       return {
         switches: result,

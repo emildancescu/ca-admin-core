@@ -2,7 +2,7 @@ import React from 'react'
 import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import TableHideColumns from './tableHideColumns'
+import ColumnSelector from './columnSelector'
 
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
@@ -12,7 +12,7 @@ class DataTable extends React.Component {
       page: 1,
       limit: 25, // default page size
     },
-    addonHideColumns: {},
+    columnSelector: {},
   }
 
   componentDidMount() {
@@ -157,7 +157,7 @@ class DataTable extends React.Component {
 
     const {
       params: { sorter, filters },
-      addonHideColumns,
+      columnSelector,
     } = this.state
 
     const { filters: propFilters, isMobileView } = this.props
@@ -177,14 +177,14 @@ class DataTable extends React.Component {
       return column
     })
 
-    // tableHideColumns Addon - Correct hidden attribute by state
+    // columnSelector - Correct hidden attribute by state
     // Inverse boolean value from Switch component property 'checked'
-    if (Object.keys(addonHideColumns).length > 0) {
+    if (Object.keys(columnSelector).length > 0) {
       processedColumns = processedColumns.map(column => {
         const lookup = column.dataIndex || column.key
 
-        if (addonHideColumns[lookup] !== undefined) {
-          column.hidden = !addonHideColumns[lookup]
+        if (columnSelector[lookup] !== undefined) {
+          column.hidden = !columnSelector[lookup]
         }
 
         return column
@@ -192,9 +192,9 @@ class DataTable extends React.Component {
     }
 
     // Need to make copies of 'processedColumns' to not loose columns
-    // For <Table /> and / or for <TableHideColumns />
+    // For <Table /> and / or for <ColumnSelector  />
 
-    let columnsForHide = [...processedColumns]
+    let columnsForColumnSelector = [...processedColumns]
     let columnsForTable = [...processedColumns]
 
     // Filter and map <Table /> columns based on hidden prop
@@ -223,18 +223,20 @@ class DataTable extends React.Component {
       return column
     })
 
-    // Filter <TableHideColumns /> columns based on hideAddon prop
-    columnsForHide = columnsForHide.filter(el => el.hideAddon !== false)
+    // Filter <ColumnSelector /> columns based on 'excludeFromColumnSelector' prop
+    columnsForColumnSelector = columnsForColumnSelector.filter(
+      el => el.excludeFromColumnSelector !== true,
+    )
 
     // Return both arrays of columns
-    return [columnsForHide, columnsForTable]
+    return [columnsForColumnSelector, columnsForTable]
   }
 
-  setHiddenColumns = columns => {
+  setColumnSelector = columns => {
     this.setState(prevState => {
       return {
         ...prevState,
-        addonHideColumns: columns,
+        columnSelector: columns,
       }
     })
   }
@@ -249,11 +251,11 @@ class DataTable extends React.Component {
       actions,
       rowDoubleClick,
       columns,
-      hideColumnsAddon,
+      showColumnSelector,
       ...rest
     } = this.props
 
-    const [columnsForHide, columnsForTable] = this.processColumns(columns)
+    const [columnsForColumnSelector, columnsForTable] = this.processColumns(columns)
 
     const extra = (
       <Row type="flex" justify="space-between">
@@ -267,11 +269,11 @@ class DataTable extends React.Component {
           />
         </Col>
         <Col>
-          {hideColumnsAddon && (
-            <TableHideColumns
-              setHiddenColumns={this.setHiddenColumns}
+          {showColumnSelector && (
+            <ColumnSelector
+              setColumnSelector={this.setColumnSelector}
               className="mr-2"
-              columns={columnsForHide}
+              columns={columnsForColumnSelector}
             />
           )}
           <Tooltip placement="top" title="Clear all filters">

@@ -74,14 +74,14 @@ class Table extends React.Component {
         title: 'email',
         dataIndex: 'email',
         sorter: true,
-        hideAddon: false,
+        excludeFromColumnSelector: true,
       },
       ...this.getExtraColumns(view),
     ]
 
     return (
       <Card title={<strong>DataTable</strong>} extra={extra}>
-        <DataTable columns={columns} dataSource={users} loadAction={load} hideColumnsAddon />
+        <DataTable columns={columns} dataSource={users} loadAction={load} showColumnSelector />
       </Card>
     )
   }
