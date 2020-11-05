@@ -2,7 +2,6 @@ import React from 'react'
 import { Table, Input, Row, Col, Button, Tooltip } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import store from 'store'
 import ColumnSelector from './columnSelector'
 
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
@@ -17,26 +16,6 @@ class DataTable extends React.Component {
   }
 
   componentDidMount() {
-    const { settingsKey } = this.props
-
-    // Check for settingsKey and localStorage settings
-    if (settingsKey) {
-      const tableSettings = store.get(`app.datatable.${settingsKey}`)
-
-      if (tableSettings) {
-        const columnSelectorSettings = tableSettings.columnSelector
-
-        if (columnSelectorSettings && _.isObject(columnSelectorSettings)) {
-          this.setState(prevState => {
-            return {
-              ...prevState,
-              columnSelector: columnSelectorSettings,
-            }
-          })
-        }
-      }
-    }
-
     // perform initial load
     this.load()
   }
@@ -183,40 +162,39 @@ class DataTable extends React.Component {
 
     const { filters: propFilters, isMobileView } = this.props
 
-    // filter out columns that should be hidden on mobile
-    let processedColumns = isMobileView
-      ? columns.filter(column => column.mobile !== false)
-      : columns
-
-    // Set hidden attribute by default
-    // Avoid using 'undefined' type
-    processedColumns = processedColumns.map(column => {
-      if (column.hidden === undefined) {
+    const processedColumns = columns.map(column => {
+      // Set hidden attribute by default. Avoid using 'undefined' type
+      if (column.hidden !== true) {
         column.hidden = false
+      }
+
+      // filter out columns that should be hidden on mobile
+      // Will be overwritten by <ColumnSelector  /> if enabled
+      if (column.mobile === false && isMobileView) {
+        column.hidden = true
       }
 
       return column
     })
 
+    // Need to make copies of 'processedColumns' to not loose columns
+    // For <Table /> we use 'columnsForTable'
+    // For <ColumnSelector  /> we use 'processedColumns'
+
+    let columnsForTable = [...processedColumns]
+
     // columnSelector - Correct hidden attribute by state
-    // Inverse boolean value from Switch component property 'checked'
     if (Object.keys(columnSelector).length > 0) {
-      processedColumns = processedColumns.map(column => {
+      columnsForTable = columnsForTable.map(column => {
         const lookup = column.dataIndex || column.key
 
         if (columnSelector[lookup] !== undefined) {
-          column.hidden = !columnSelector[lookup]
+          column.hidden = columnSelector[lookup]
         }
 
         return column
       })
     }
-
-    // Need to make copies of 'processedColumns' to not loose columns
-    // For <Table /> and / or for <ColumnSelector  />
-
-    let columnsForColumnSelector = [...processedColumns]
-    let columnsForTable = [...processedColumns]
 
     // Filter and map <Table /> columns based on hidden prop
     columnsForTable = columnsForTable.filter(column => column.hidden === false)
@@ -244,18 +222,12 @@ class DataTable extends React.Component {
       return column
     })
 
-    // Filter <ColumnSelector /> columns based on 'excludeFromColumnSelector' prop
-    columnsForColumnSelector = columnsForColumnSelector.filter(
-      el => el.excludeFromColumnSelector !== true,
-    )
-
     // Return both arrays of columns
-    return [columnsForColumnSelector, columnsForTable]
+    return [processedColumns, columnsForTable]
   }
 
-  setColumnSelector = columns => {
-    const { settingsKey } = this.props
-
+  // Event for <ColumnSelector />
+  onColumnSelectionChanged = columns => {
     this.setState(prevState => {
       const newState = {
         ...prevState,
@@ -263,12 +235,6 @@ class DataTable extends React.Component {
           ...prevState.columnSelector,
           ...columns,
         },
-      }
-
-      if (settingsKey) {
-        store.set(`app.datatable.${settingsKey}`, {
-          columnSelector: { ...newState.columnSelector },
-        })
       }
 
       return newState
@@ -286,6 +252,7 @@ class DataTable extends React.Component {
       rowDoubleClick,
       columns,
       showColumnSelector,
+      settingsKey,
       ...rest
     } = this.props
 
@@ -305,9 +272,10 @@ class DataTable extends React.Component {
         <Col>
           {showColumnSelector && (
             <ColumnSelector
-              setColumnSelector={this.setColumnSelector}
+              onColumnSelectionChanged={this.onColumnSelectionChanged}
               className="mr-2"
               columns={columnsForColumnSelector}
+              settingsKey={settingsKey}
             />
           )}
           <Tooltip placement="top" title="Clear all filters">

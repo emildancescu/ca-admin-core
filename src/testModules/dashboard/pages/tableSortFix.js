@@ -29,6 +29,7 @@ class Table extends React.Component {
       {
         title: 'Roles',
         dataIndex: 'roles',
+        mobile: false,
       },
     ]
   }
@@ -75,6 +76,11 @@ class Table extends React.Component {
         dataIndex: 'email',
         sorter: true,
         excludeFromColumnSelector: true,
+      },
+      {
+        title: 'No dataIndex',
+        key: 'actions',
+        render: () => Math.floor(Math.random() * 100),
       },
       ...this.getExtraColumns(view),
     ]

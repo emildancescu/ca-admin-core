@@ -1,79 +1,85 @@
-import { v4 as uuidv4 } from 'uuid'
 import React from 'react'
 import { Switch, Button, Popover } from 'antd'
-import isEqual from 'lodash/isEqual'
+import isObject from 'lodash/isObject'
+import store from 'store'
 
 export default class ColumnSelector extends React.Component {
-  state = {
-    switches: {},
-  }
-
   componentDidMount() {
-    const { columns } = this.props
-    this.propColumnsToState(columns)
-  }
+    const { onColumnSelectionChanged, settingsKey, columns } = this.props
 
-  componentDidUpdate(prevState, prevProps, snapshot) {
-    const { columns } = this.props
-    if (snapshot.notifyRequired) {
-      this.propColumnsToState(columns)
+    // Check for settingsKey and localStorage settings
+    // Apply once and send to parent <DataTable /> state
+    if (settingsKey) {
+      const tableSettings = store.get(`app.datatable.${settingsKey}`)
+
+      if (tableSettings) {
+        const columnSelectorSettings = tableSettings.columnSelector
+
+        if (columnSelectorSettings && isObject(columnSelectorSettings)) {
+          const result = {}
+          let newColumns = [...columns]
+
+          newColumns = newColumns.map(col => {
+            const keyOrDataIndex = col.dataIndex || col.key
+            if (columnSelectorSettings[keyOrDataIndex]) {
+              col.hidden = columnSelectorSettings[keyOrDataIndex]
+            }
+
+            return col
+          })
+
+          newColumns.forEach(el => {
+            const keyOrDataIndex = el.dataIndex || el.key
+            result[keyOrDataIndex] = el.hidden
+          })
+
+          onColumnSelectionChanged(result)
+        }
+      }
     }
   }
 
-  getSnapshotBeforeUpdate(prevProps) {
-    const { columns } = this.props
-    return { notifyRequired: !isEqual(prevProps.columns, columns) }
-  }
+  handleOnChange = (checked, event, dataIndex) => {
+    const { onColumnSelectionChanged, settingsKey, columns } = this.props
 
-  propColumnsToState = columns => {
-    const colSettings = {}
+    const result = {}
 
     columns.forEach(el => {
-      colSettings[el.dataIndex] = !el.hidden
+      const keyOrDataIndex = el.dataIndex || el.key
+      result[keyOrDataIndex] = el.hidden
     })
 
-    this.setState(prevState => {
-      return {
-        switches: {
-          ...prevState.switches,
-          ...colSettings,
-        },
-      }
-    })
-  }
+    result[dataIndex] = !checked
 
-  handleOnChange = (checked, event, dataIndex) => {
-    const { setColumnSelector } = this.props
+    if (settingsKey) {
+      store.set(`app.datatable.${settingsKey}`, {
+        columnSelector: { ...result },
+      })
+    }
 
-    this.setState(prevState => {
-      const result = {
-        ...prevState.switches,
-        [dataIndex]: checked,
-      }
-
-      setColumnSelector(result)
-
-      return {
-        switches: result,
-      }
-    })
+    onColumnSelectionChanged(result)
   }
 
   render() {
-    const { columns, className } = this.props
+    let { columns } = this.props
+    const { className } = this.props
 
-    const { switches } = this.state
+    // Filter columns based on 'excludeFromColumnSelector' prop
+    columns = columns.filter(el => el.excludeFromColumnSelector !== true)
 
     const settings = (
       <div style={{ width: 150 }}>
         {columns.length > 0
           ? columns.map(el => {
+              const keyOrDataIndex = el.dataIndex || el.key
               return (
-                <div key={uuidv4()} className="mb-2">
+                <div key={keyOrDataIndex} className="mb-2">
                   <Switch
                     className="mr-3"
-                    checked={switches[el.dataIndex]}
-                    onChange={(checked, event) => this.handleOnChange(checked, event, el.dataIndex)}
+                    checked={!el.hidden}
+                    onChange={(checked, event) =>
+                      this.handleOnChange(checked, event, keyOrDataIndex)
+                    }
                   />
                   {el.title}
                 </div>
