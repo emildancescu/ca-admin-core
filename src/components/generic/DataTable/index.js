@@ -3,6 +3,7 @@ import { Table, Input, Row, Col, Button, Tooltip, Icon } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import RemoteFilter from './remoteFilter'
+import ColumnSelector from './columnSelector'
 
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
@@ -12,6 +13,7 @@ class DataTable extends React.Component {
       page: 1,
       limit: 25, // default page size
     },
+    columnSelector: {},
   }
 
   componentDidMount() {
@@ -173,19 +175,49 @@ class DataTable extends React.Component {
 
     const {
       params: { sorter, filters },
+      columnSelector,
     } = this.state
 
     const { filters: propFilters, isMobileView } = this.props
 
-    // filter out columns that should be hidden on mobile
-    let processedColumns = isMobileView
-      ? columns.filter(column => column.mobile !== false)
-      : columns
+    const processedColumns = columns.map(column => {
+      // Set hidden attribute by default. Avoid using 'undefined' type
+      if (column.hidden !== true) {
+        column.hidden = false
+      }
 
-    // filter columns based on hidden prop
-    processedColumns = processedColumns.filter(column => column.hidden !== true)
+      // filter out columns that should be hidden on mobile
+      // Will be overwritten by <ColumnSelector  /> if enabled
+      if (column.mobile === false && isMobileView) {
+        column.hidden = true
+      }
 
-    processedColumns = processedColumns.map(column => {
+      return column
+    })
+
+    // Need to make copies of 'processedColumns' to not loose columns
+    // For <Table /> we use 'columnsForTable'
+    // For <ColumnSelector  /> we use 'processedColumns'
+
+    let columnsForTable = [...processedColumns]
+
+    // columnSelector - Correct hidden attribute by state
+    if (Object.keys(columnSelector).length > 0) {
+      columnsForTable = columnsForTable.map(column => {
+        const lookup = column.dataIndex || column.key
+
+        if (columnSelector[lookup] !== undefined) {
+          column.hidden = columnSelector[lookup]
+        }
+
+        return column
+      })
+    }
+
+    // Filter and map <Table /> columns based on hidden prop
+    columnsForTable = columnsForTable.filter(column => column.hidden === false)
+
+    columnsForTable = columnsForTable.map(column => {
       if (!sorter) {
         column.sortOrder = false
       }
@@ -215,7 +247,23 @@ class DataTable extends React.Component {
       return column
     })
 
-    return processedColumns
+    // Return both arrays of columns
+    return [processedColumns, columnsForTable]
+  }
+
+  // Event for <ColumnSelector />
+  onColumnSelectionChanged = columns => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        columnSelector: {
+          ...prevState.columnSelector,
+          ...columns,
+        },
+      }
+
+      return newState
+    })
   }
 
   render() {
@@ -228,8 +276,12 @@ class DataTable extends React.Component {
       actions,
       rowDoubleClick,
       columns,
+      showColumnSelector,
+      settingsKey,
       ...rest
     } = this.props
+
+    const [columnsForColumnSelector, columnsForTable] = this.processColumns(columns)
 
     const extra = (
       <Row type="flex" justify="space-between">
@@ -243,6 +295,14 @@ class DataTable extends React.Component {
           />
         </Col>
         <Col>
+          {showColumnSelector && (
+            <ColumnSelector
+              onColumnSelectionChanged={this.onColumnSelectionChanged}
+              className="mr-2"
+              columns={columnsForColumnSelector}
+              settingsKey={settingsKey}
+            />
+          )}
           <Tooltip placement="top" title="Clear all filters">
             <Button icon="stop" className="mb-4" onClick={this.handleClearFilters} />
           </Tooltip>
@@ -256,8 +316,6 @@ class DataTable extends React.Component {
       </Row>
     )
 
-    const processedColumns = this.processColumns(columns)
-
     return (
       <div>
         {extra}
@@ -266,7 +324,7 @@ class DataTable extends React.Component {
           key={columns.length}
           rowKey="id"
           className="utils__scrollTable"
-          columns={processedColumns}
+          columns={columnsForTable}
           dataSource={data}
           onChange={this.handleTableChange}
           loading={loading}

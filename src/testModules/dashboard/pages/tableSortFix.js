@@ -69,7 +69,7 @@ const remoteFilterUsersLastName = {
 
 @withRouter
 @connect(({ users }) => ({ users }))
-class TableFix extends React.Component {
+class Table extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -99,6 +99,7 @@ class TableFix extends React.Component {
           { text: 'fleet-operator', value: 'fleet-operator' },
           { text: 'admin', value: 'admin' },
         ],
+        mobile: false,
       },
     ]
   }
@@ -146,16 +147,28 @@ class TableFix extends React.Component {
         title: 'email',
         dataIndex: 'email',
         sorter: true,
+        excludeFromColumnSelector: true,
+      },
+      {
+        title: 'No dataIndex',
+        key: 'actions',
+        render: () => Math.floor(Math.random() * 100),
       },
       ...this.getExtraColumns(view),
     ]
 
     return (
-      <Card title={<strong>TableFixTest</strong>} extra={extra}>
-        <DataTable columns={columns} dataSource={users} loadAction={load} />
+      <Card title={<strong>DataTable</strong>} extra={extra}>
+        <DataTable
+          columns={columns}
+          dataSource={users}
+          loadAction={load}
+          showColumnSelector
+          settingsKey="users"
+        />
       </Card>
     )
   }
 }
 
-export default TableFix
+export default Table
