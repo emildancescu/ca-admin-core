@@ -10,8 +10,9 @@ import {
   Upload,
 } from 'antd'
 import moment from 'moment'
+import _ from 'lodash'
+
 import QRScanner from 'components/generic/QRScanner'
-import isObject from 'lodash/isObject'
 import countries from './countries.json'
 import './style.css'
 import RemoteSelect from './remoteSelect'
@@ -97,7 +98,7 @@ class Form extends React.Component {
         }
       >
         {options.map(option => {
-          const isString = !isObject(option)
+          const isString = !_.isObject(option)
 
           return (
             <Select.Option key={option} value={isString ? option : option.value}>
@@ -254,10 +255,10 @@ class Form extends React.Component {
           fieldArray.shift()
         }
 
-        if (currentValue) {
+        if (!_.isNil(currentValue)) {
           initialValue = currentValue
         }
-      } else if (values[field]) {
+      } else if (!_.isNil(values[field])) {
         initialValue = values[field]
       }
 

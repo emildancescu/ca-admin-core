@@ -74,7 +74,7 @@ class Dashboard extends React.Component {
             config={config}
             onSubmit={this.onSubmit}
             onChange={this.onChange}
-            values={{ input: null }}
+            values={{ input: 0 }}
           />
         </Card>
 
