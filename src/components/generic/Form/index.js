@@ -255,10 +255,10 @@ class Form extends React.Component {
           fieldArray.shift()
         }
 
-        if (!_.isNil(currentValue)) {
+        if (!_.isNil(currentValue) && currentValue !== '') {
           initialValue = currentValue
         }
-      } else if (!_.isNil(values[field])) {
+      } else if (!_.isNil(values[field]) && values[field] !== '') {
         initialValue = values[field]
       }
 
