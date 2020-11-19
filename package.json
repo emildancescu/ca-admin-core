@@ -1,6 +1,6 @@
 {
   "name": "ca-admin-core",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "connected-react-router": "^6.4.0",
+    "downloadjs": "^1.4.7",
     "history": "^4.9.0",
     "nprogress": "^0.2.0",
     "rc-drawer": "^1.7.7",
@@ -81,7 +82,7 @@
     "redux-logger": "^3.0.6"
   },
   "peerDependencies": {
-    "antd": "^3.23.2",
+    "antd": "^3.26.19",
     "bootstrap-css-only": "^4.2.1",
     "classnames": "^2.2.6",
     "leaflet": "^1.5.1",
@@ -110,7 +111,7 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "@babel/preset-react": "^7.9.4",
-    "antd": "^3.23.2",
+    "antd": "^3.26.20",
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "bootstrap-css-only": "^4.2.1",

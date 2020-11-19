@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Button, Popover } from 'antd'
+import { Switch, Button, Popover, Tooltip } from 'antd'
 import isObject from 'lodash/isObject'
 import store from 'store'
 
@@ -68,7 +68,7 @@ export default class ColumnSelector extends React.Component {
     columns = columns.filter(el => el.excludeFromColumnSelector !== true)
 
     const settings = (
-      <div style={{ width: 150 }}>
+      <div style={{ width: 200 }}>
         {columns.length > 0
           ? columns.map(el => {
               const keyOrDataIndex = el.dataIndex || el.key
@@ -91,7 +91,9 @@ export default class ColumnSelector extends React.Component {
 
     return (
       <Popover placement="bottomRight" trigger="click" content={settings}>
-        <Button className={className} icon="table" />
+        <Tooltip placement="top" title="Toggle column visivility">
+          <Button className={className} icon="table" />
+        </Tooltip>
       </Popover>
     )
   }

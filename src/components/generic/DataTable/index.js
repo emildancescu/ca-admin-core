@@ -2,6 +2,9 @@ import React from 'react'
 import { Table, Input, Row, Col, Button, Tooltip, Icon } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
+import download from 'downloadjs'
+
+import net from 'utils/net'
 import RemoteFilter from './remoteFilter'
 import ColumnSelector from './columnSelector'
 
@@ -34,8 +37,8 @@ class DataTable extends React.Component {
     }
   }
 
-  load = () => {
-    const { dispatch, loadAction, filters, loadActionPayload } = this.props
+  getParams = () => {
+    const { filters, loadActionPayload } = this.props
     let { params } = this.state
 
     // if filters have been set as a prop, merge with the ones from state
@@ -57,7 +60,13 @@ class DataTable extends React.Component {
       }
     }
 
-    dispatch(loadAction(params))
+    return params
+  }
+
+  load = () => {
+    const { dispatch, loadAction } = this.props
+
+    dispatch(loadAction(this.getParams()))
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -150,6 +159,25 @@ class DataTable extends React.Component {
 
   handleRefresh = () => {
     this.load()
+  }
+
+  handleExportClick = () => {
+    const {
+      exportConfig: {
+        apiFn,
+        filename = 'export.xlsx',
+        mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      },
+    } = this.props
+    const { api } = net
+
+    const apiConfig = apiFn(this.getParams())
+
+    api(apiConfig)
+      .then(response => response.blob())
+      .then(blob => {
+        download(blob, filename, mimeType)
+      })
   }
 
   remoteFilterConfig = config => ({
@@ -277,6 +305,7 @@ class DataTable extends React.Component {
       rowDoubleClick,
       columns,
       showColumnSelector,
+      exportConfig,
       settingsKey,
       ...rest
     } = this.props
@@ -287,31 +316,43 @@ class DataTable extends React.Component {
       <Row type="flex" justify="space-between">
         <Col xs={24} sm={8}>
           <Input.Search
+            className="mb-4"
             placeholder="Search..."
             onSearch={this.handleSearch}
             value={search}
             onChange={this.handleSearchInputChange}
-            className="mb-4"
           />
         </Col>
         <Col>
-          {showColumnSelector && (
-            <ColumnSelector
-              onColumnSelectionChanged={this.onColumnSelectionChanged}
-              className="mr-2"
-              columns={columnsForColumnSelector}
-              settingsKey={settingsKey}
-            />
-          )}
-          <Tooltip placement="top" title="Clear all filters">
-            <Button icon="stop" className="mb-4" onClick={this.handleClearFilters} />
-          </Tooltip>
-          <Tooltip placement="top" title="Reload using current filters">
-            <Button type="primary" icon="reload" className="ml-2 mb-4" onClick={this.handleRefresh}>
-              Refresh
-            </Button>
-          </Tooltip>
-          {actions}
+          <div className="mb-4">
+            <Button.Group>
+              <Tooltip placement="top" title="Clear all filters">
+                <Button icon="stop" onClick={this.handleClearFilters} />
+              </Tooltip>
+              <Tooltip placement="top" title="Reload using current filters">
+                <Button icon="reload" onClick={this.handleRefresh}>
+                  Refresh
+                </Button>
+              </Tooltip>
+            </Button.Group>
+
+            {showColumnSelector && (
+              <ColumnSelector
+                onColumnSelectionChanged={this.onColumnSelectionChanged}
+                className="ml-2"
+                columns={columnsForColumnSelector}
+                settingsKey={settingsKey}
+              />
+            )}
+
+            {exportConfig && (
+              <Tooltip placement="top" title="Export Excel">
+                <Button className="ml-2" icon="download" onClick={this.handleExportClick} />
+              </Tooltip>
+            )}
+
+            {actions}
+          </div>
         </Col>
       </Row>
     )
