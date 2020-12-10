@@ -2,6 +2,7 @@ import React from 'react'
 import { Select, Spin } from 'antd'
 import debounce from 'lodash/debounce'
 import isObject from 'lodash/isObject'
+import isEqual from 'lodash/isEqual'
 
 const { Option } = Select
 
@@ -35,6 +36,8 @@ apiFn example :
 
 */
 
+let latestFetch = 0
+
 class RemoteSelect extends React.Component {
   constructor(props) {
     super(props)
@@ -50,6 +53,22 @@ class RemoteSelect extends React.Component {
       value: [],
       fetching: false,
       preOptions: options || [],
+    }
+  }
+
+  componentDidUpdate = prevProps => {
+    const {
+      itemConfig: { options },
+    } = this.props
+
+    const {
+      itemConfig: { options: prevOptions },
+    } = prevProps
+
+    if (!isEqual(prevOptions, options)) {
+      this.setState({
+        preOptions: options,
+      })
     }
   }
 
@@ -70,9 +89,15 @@ class RemoteSelect extends React.Component {
     const params = {}
     params[paramSearchQuery] = value
 
+    // Update state 'data' with latest triggered fetch
+    latestFetch += 1
+    const fetchID = latestFetch
+
     const data = await apiFn(params)
 
-    this.setState({ data, fetching: false })
+    if (fetchID === latestFetch) {
+      this.setState({ data, fetching: false })
+    }
   }
 
   handleChange = (value, option) => {

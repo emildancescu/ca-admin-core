@@ -5,6 +5,8 @@ import isObject from 'lodash/isObject'
 
 const { Option } = Select
 
+let latestFetch = 0
+
 class RemoteFilter extends React.Component {
   constructor(props) {
     super(props)
@@ -31,9 +33,15 @@ class RemoteFilter extends React.Component {
     const params = {}
     params[paramSearchQuery] = value
 
+    // Update state 'data' with latest triggered fetch
+    latestFetch += 1
+    const fetchID = latestFetch
+
     const data = await apiFn(params)
 
-    this.setState({ data, fetching: false })
+    if (fetchID === latestFetch) {
+      this.setState({ data, fetching: false })
+    }
   }
 
   handleChange = value => {
