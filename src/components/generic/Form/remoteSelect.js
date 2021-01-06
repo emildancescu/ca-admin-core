@@ -141,6 +141,7 @@ class RemoteSelect extends React.Component {
     const {
       itemConfig: {
         remoteSearch: { apiFn, paramSearchQuery, ...restRS },
+        disabled,
       },
       // pass value from Form's getFieldDecorator() to <Select>
       ...restProps
@@ -155,6 +156,7 @@ class RemoteSelect extends React.Component {
         {...restRS}
         // DO NOT modify below default props
         {...restProps}
+        disabled={disabled}
         showSearch
         allowClear
         onSearch={this.fetchData}
