@@ -96,43 +96,18 @@ class RemoteSelect extends React.Component {
     const data = await apiFn(params)
 
     if (fetchID === latestFetch) {
-      this.setState({ data, fetching: false })
+      this.setState({
+        data,
+        fetching: false,
+        preOptions: [],
+      })
     }
   }
 
-  handleChange = (value, option) => {
-    const {
-      onChange,
-      itemConfig: {
-        remoteSearch: { mode },
-      },
-    } = this.props
+  handleChange = value => {
+    const { onChange } = this.props
 
     onChange(value)
-
-    let preOptionsValue = []
-
-    if (mode === 'multiple') {
-      preOptionsValue = option.map(el => {
-        return {
-          text: el.props.title,
-          value: el.props.value,
-        }
-      })
-    } else if (option) {
-      preOptionsValue.push({
-        text: option.props.title,
-        value: option.props.value,
-      })
-    }
-
-    this.setState({
-      // eslint-disable-next-line react/no-unused-state
-      value,
-      data: [],
-      fetching: false,
-      preOptions: preOptionsValue,
-    })
   }
 
   render() {
@@ -141,6 +116,7 @@ class RemoteSelect extends React.Component {
     const {
       itemConfig: {
         remoteSearch: { apiFn, paramSearchQuery, ...restRS },
+        disabled,
       },
       // pass value from Form's getFieldDecorator() to <Select>
       ...restProps
@@ -155,6 +131,7 @@ class RemoteSelect extends React.Component {
         {...restRS}
         // DO NOT modify below default props
         {...restProps}
+        disabled={disabled}
         showSearch
         allowClear
         onSearch={this.fetchData}
