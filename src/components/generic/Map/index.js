@@ -29,7 +29,7 @@ export default class LeafletMap extends React.Component {
 
     return (
       <Map center={position || center} zoom={14} {...rest}>
-        <TileLayer url="https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" />
+        <TileLayer url="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2l0eWxpbmsiLCJhIjoiY2p1bWFlOTMzMHNiMTQzcHcwOWd3ajdkdyJ9.3S-mnIR0lvcsWq4elpk-TA" />
 
         {position && (
           <Marker position={position}>
