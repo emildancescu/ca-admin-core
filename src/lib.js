@@ -16,3 +16,5 @@ export { request, networkActions, extraNetworkActions } from 'redux/network/acti
 export { getToken, getBaseAuthHeaders } from 'utils/auth'
 
 export { default as core } from 'modules/core'
+
+export { default as RemoteSelect } from 'components/generic/Form/remoteSelect'

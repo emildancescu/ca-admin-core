@@ -104,10 +104,10 @@ class RemoteSelect extends React.Component {
     }
   }
 
-  handleChange = value => {
+  handleChange = (value, option) => {
     const { onChange } = this.props
 
-    onChange(value)
+    onChange(value, option)
   }
 
   render() {
