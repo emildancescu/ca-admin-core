@@ -108,13 +108,34 @@ class MenuLeft extends React.Component {
     const {
       menu = [],
       badges,
-      user: { roles: userRoles },
+      user: { roles: userRoles, permissions },
     } = this.props
 
     const isAuthorized = roles => {
       // intersection of roles and userRoles must have at least one element
       return _.intersection(roles, userRoles).length > 0 || roles.length === 0
     }
+
+    // Cityride CASL permissions
+    const cityride = process.env.REACT_APP_BASE_URL.includes('cityride')
+
+    let permissionsMap = []
+
+    if (permissions && _.isArray(permissions)) {
+      permissionsMap = permissions.map(el => {
+        if (el.startsWith('menu_')) {
+          const arr = el.split('_')
+          return arr[1]
+        }
+
+        return 'eslintReturn'
+      })
+    }
+
+    const isAuthorizedCityride = key => {
+      return permissionsMap.includes(key)
+    }
+    // Cityride CASL permissions
 
     const generateItem = item => {
       const { key, title, url, icon, disabled, badge } = item
@@ -166,6 +187,10 @@ class MenuLeft extends React.Component {
         const { title, icon, key, children, roles = [] } = menuItem
 
         if (!isAuthorized(roles)) {
+          return null
+        }
+
+        if (cityride && !isAuthorizedCityride(key)) {
           return null
         }
 
