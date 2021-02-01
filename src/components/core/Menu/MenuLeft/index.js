@@ -108,34 +108,20 @@ class MenuLeft extends React.Component {
     const {
       menu = [],
       badges,
-      user: { roles: userRoles, permissions },
+      user: {
+        roles: userRoles, // Array of strings
+        permissions: userPermissions, // string
+      },
     } = this.props
 
-    const isAuthorized = roles => {
+    const isAuthorized = (roles, permission) => {
+      // Permission first approach
+      if (userPermissions && permission) {
+        return _.includes(userPermissions, permission) || _.isUndefined(permission)
+      }
       // intersection of roles and userRoles must have at least one element
       return _.intersection(roles, userRoles).length > 0 || roles.length === 0
     }
-
-    // Cityride CASL permissions
-    const cityride = process.env.REACT_APP_BASE_URL.includes('cityride')
-
-    let permissionsMap = []
-
-    if (permissions && _.isArray(permissions)) {
-      permissionsMap = permissions.map(el => {
-        if (el.startsWith('menu_')) {
-          const arr = el.split('_')
-          return arr[1]
-        }
-
-        return 'eslintReturn'
-      })
-    }
-
-    const isAuthorizedCityride = key => {
-      return permissionsMap.includes(key)
-    }
-    // Cityride CASL permissions
 
     const generateItem = item => {
       const { key, title, url, icon, disabled, badge } = item
@@ -184,13 +170,9 @@ class MenuLeft extends React.Component {
 
     const generateSubmenu = items =>
       items.map(menuItem => {
-        const { title, icon, key, children, roles = [] } = menuItem
+        const { title, icon, key, children, roles = [], permission } = menuItem
 
-        if (!isAuthorized(roles)) {
-          return null
-        }
-
-        if (cityride && !isAuthorizedCityride(key)) {
+        if (!isAuthorized(roles, permission)) {
           return null
         }
 
