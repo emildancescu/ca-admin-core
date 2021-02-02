@@ -108,10 +108,17 @@ class MenuLeft extends React.Component {
     const {
       menu = [],
       badges,
-      user: { roles: userRoles },
+      user: {
+        roles: userRoles, // Array of strings
+        permissions: userPermissions, // string
+      },
     } = this.props
 
-    const isAuthorized = roles => {
+    const isAuthorized = (roles, permission) => {
+      // Permission first approach
+      if (userPermissions && permission) {
+        return _.includes(userPermissions, permission) || _.isUndefined(permission)
+      }
       // intersection of roles and userRoles must have at least one element
       return _.intersection(roles, userRoles).length > 0 || roles.length === 0
     }
@@ -163,9 +170,9 @@ class MenuLeft extends React.Component {
 
     const generateSubmenu = items =>
       items.map(menuItem => {
-        const { title, icon, key, children, roles = [] } = menuItem
+        const { title, icon, key, children, roles = [], permission } = menuItem
 
-        if (!isAuthorized(roles)) {
+        if (!isAuthorized(roles, permission)) {
           return null
         }
 
