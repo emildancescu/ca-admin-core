@@ -143,7 +143,12 @@ class RemoteSelect extends React.Component {
           const isString = !isObject(d)
 
           return (
-            <Option key={d} value={isString ? d : d.value} title={isString ? d : d.text}>
+            <Option
+              key={isString ? d : JSON.stringify(d)}
+              value={isString ? d : d.value}
+              title={isString ? d : d.text}
+              extra={d}
+            >
               {isString ? d : d.text}
             </Option>
           )
