@@ -51,11 +51,13 @@ class LanguageSelector extends React.Component {
       </Menu>
     )
     return (
-      <Dropdown overlay={langMenu} trigger={['click']}>
-        <div className={styles.dropdown}>
-          <strong className="text-uppercase">{language}</strong>
-        </div>
-      </Dropdown>
+      <div className="mr-4">
+        <Dropdown overlay={langMenu} trigger={['click']}>
+          <div className={styles.dropdown}>
+            <strong className="text-uppercase">{language}</strong>
+          </div>
+        </Dropdown>
+      </div>
     )
   }
 }
