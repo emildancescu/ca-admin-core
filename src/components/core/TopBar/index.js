@@ -1,22 +1,22 @@
-import React from 'react'
 // import ProjectManagement from './ProjectManagement'
+// import Breadcrumbs from '../Breadcrumbs'
+import * as React from 'react'
 import ProfileMenu from './ProfileMenu'
 import LanguageSelector from './LanguageSelector'
-// import Breadcrumbs from '../Breadcrumbs'
 import styles from './style.module.scss'
+import { AdminContext } from '../Admin'
 
-class TopBar extends React.Component {
-  render() {
-    return (
-      <div className={styles.topbar}>
-        <div className="mr-auto" />
-        <div className="mr-4">
-          <LanguageSelector />
-        </div>
-        <ProfileMenu />
-      </div>
-    )
-  }
+const TopBar = () => {
+  const adminCtx = React.useContext(AdminContext)
+
+  return (
+    <div className={styles.topbar}>
+      <div className="mr-auto" />
+      {adminCtx.topBarComp && adminCtx.topBarComp()}
+      <LanguageSelector />
+      <ProfileMenu />
+    </div>
+  )
 }
 
 export default TopBar

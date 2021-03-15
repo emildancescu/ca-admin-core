@@ -7,6 +7,7 @@ import { routerMiddleware } from 'connected-react-router'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { createBrowserHistory } from 'history'
 import * as serviceWorker from 'serviceWorker'
+import PropTypes from 'prop-types'
 
 import Router from 'components/core/Router'
 import Localization from 'components/core/Localization'
@@ -109,6 +110,8 @@ const getLocales = modules => {
   return locales
 }
 
+export const AdminContext = React.createContext({})
+
 export default class Admin extends Component {
   constructor(props) {
     super(props)
@@ -123,15 +126,28 @@ export default class Admin extends Component {
 
     return (
       <Provider store={createAdminStore(this.modules)}>
-        <Localization locales={getLocales(this.modules)}>
-          <Router
-            history={history}
-            routes={getRoutes(this.modules)}
-            menu={getMenu(this.modules)}
-            title={title}
-          />
-        </Localization>
+        <AdminContext.Provider value={this.props}>
+          <Localization locales={getLocales(this.modules)}>
+            <Router
+              history={history}
+              routes={getRoutes(this.modules)}
+              menu={getMenu(this.modules)}
+              title={title}
+            />
+          </Localization>
+        </AdminContext.Provider>
       </Provider>
     )
   }
+}
+
+Admin.propTypes = {
+  title: PropTypes.string.isRequired,
+  modules: PropTypes.array.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
+  topBarComp: PropTypes.elementType,
+}
+
+Admin.defaultProps = {
+  topBarComp: null,
 }
