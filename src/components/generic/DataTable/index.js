@@ -262,7 +262,7 @@ class DataTable extends React.Component {
 
       // if a filter has been set via props, prevent user from changing it
       if (propFilters && propFilters[column.dataIndex]) {
-        column.filters = null
+        column.filters = []
       }
 
       if (column.remoteFilter) {
