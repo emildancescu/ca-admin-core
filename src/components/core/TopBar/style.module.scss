@@ -11,4 +11,8 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
+
+  @media (max-width: $sm-max-width) {
+    padding-left: rem(45);
+  }
 }
