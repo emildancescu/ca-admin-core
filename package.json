@@ -71,7 +71,7 @@
     ]
   },
   "dependencies": {
-    "antd": "^3.26.20",
+    "antd": "3.26.20",
     "connected-react-router": "^6.4.0",
     "downloadjs": "^1.4.7",
     "history": "^4.9.0",
