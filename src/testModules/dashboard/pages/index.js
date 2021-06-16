@@ -54,7 +54,24 @@ class Dashboard extends React.Component {
         data: { extra: 'test param' }, // optional
         multiple: true, // default: false, optional
       },
+      {
+        label: 'TimePicker',
+        field: 'timePicker',
+        type: 'time',
+        antdProps: {
+          minuteStep: 15,
+          // Defaults to 'HH:mm:ss'
+          // This also controls what the panel shows.
+          // Below example disables seconds panel
+          format: 'HH:mm',
+        },
+      },
     ]
+
+    const initialValues = {
+      input: 0,
+      timePicker: '20:00:00',
+    }
 
     return (
       <>
@@ -74,7 +91,7 @@ class Dashboard extends React.Component {
             config={config}
             onSubmit={this.onSubmit}
             onChange={this.onChange}
-            values={{ input: 0 }}
+            values={initialValues}
           />
         </Card>
 

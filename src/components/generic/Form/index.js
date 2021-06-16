@@ -8,6 +8,7 @@ import {
   InputNumber,
   Checkbox,
   Upload,
+  TimePicker,
 } from 'antd'
 import moment from 'moment'
 import _ from 'lodash'
@@ -139,7 +140,7 @@ class Form extends React.Component {
   }
 
   getItem = itemConfig => {
-    const { field, type, placeholder, disabled, ...rest } = itemConfig
+    const { field, type, placeholder, disabled, antdProps, ...rest } = itemConfig
 
     switch (type) {
       case 'remoteSelect':
@@ -167,6 +168,15 @@ class Form extends React.Component {
             disabled={disabled}
             onChange={() => this.handleOnChange(field)}
             {...rest}
+          />
+        )
+      case 'time':
+        return (
+          <TimePicker
+            onChange={() => this.handleOnChange(field)}
+            placeholder={placeholder}
+            disabled={disabled}
+            {...antdProps}
           />
         )
       case 'number':
@@ -264,6 +274,17 @@ class Form extends React.Component {
 
       if (type === 'date' && initialValue) {
         initialValue = moment(initialValue)
+      }
+
+      if (type === 'time' && initialValue) {
+        let format = 'HH:mm:ss'
+
+        if (itemConfig.antdProps && itemConfig.antdProps.format) {
+          // eslint-disable-next-line prefer-destructuring
+          format = itemConfig.antdProps.format
+        }
+
+        initialValue = moment(initialValue, format)
       }
     }
 
