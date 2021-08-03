@@ -200,7 +200,7 @@ class Form extends React.Component {
           />
         )
       case 'textarea':
-        return <Input.TextArea placeholder={placeholder} disabled={disabled} />
+        return <Input.TextArea placeholder={placeholder} disabled={disabled} {...rest} />
       case 'checkbox':
         return <Checkbox>{placeholder}</Checkbox>
       case 'file':
@@ -215,6 +215,7 @@ class Form extends React.Component {
             placeholder={placeholder}
             disabled={disabled}
             onChange={() => this.handleOnChange(field)}
+            {...rest}
           />
         )
     }
