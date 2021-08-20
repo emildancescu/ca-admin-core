@@ -66,6 +66,34 @@ class Dashboard extends React.Component {
           format: 'HH:mm',
         },
       },
+      {
+        type: 'custom',
+        label: 'Custom',
+        field: 'custom-1',
+        render: () => 'Just a text',
+      },
+      {
+        label: 'Custom nested',
+        field: 'custom',
+        items: [
+          {
+            field: 'input-text',
+            placeholder: 'Input text',
+          },
+          {
+            type: 'custom',
+            field: 'custom-2',
+            render: () => 'Just another text',
+          },
+        ],
+      },
+      {
+        label: 'Autocomplete',
+        field: 'autocomplete',
+        type: 'autocomplete',
+        placeholder: 'Type to autocomplete',
+        dataSource: ['ala', 'bala', 'porto', 'cala'],
+      },
     ]
 
     const initialValues = {
