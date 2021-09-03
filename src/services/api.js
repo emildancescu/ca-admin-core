@@ -3,4 +3,4 @@
 import { postJson } from 'utils/net'
 
 // Auth
-export const login = (email, password, url) => postJson(url, { email, password })
+export const login = (url, params) => postJson(url, params)

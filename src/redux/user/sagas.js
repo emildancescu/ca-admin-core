@@ -8,9 +8,9 @@ import actions from './actions'
 
 const getUser = state => state.user
 
-function login(url) {
-  return function* LOGIN({ payload: { email, password } }) {
-    yield put(request(apiLogin(email, password, url), 'auth'))
+function login(url, extraParams) {
+  return function* LOGIN({ payload }) {
+    yield put(request(apiLogin(url, { ...payload, ...extraParams }), 'auth'))
   }
 }
 
@@ -42,10 +42,10 @@ function success(adminRoles) {
 }
 
 export default function* rootSaga(config) {
-  const { url, adminRoles } = config
+  const { url, adminRoles, extraParams = {} } = config
 
   yield all([
-    takeEvery(actions.LOGIN, login(url)),
+    takeEvery(actions.LOGIN, login(url, extraParams)),
     takeEvery(actions.LOGOUT, LOGOUT),
     takeEvery(actions.SUCCESS, success(adminRoles)),
   ])

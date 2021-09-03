@@ -8,6 +8,7 @@ import networkSaga from 'redux/network/sagas'
 const defaultAuthConfig = {
   url: API.LOGIN,
   adminRoles: ADMIN_ROLES,
+  extraParams: {},
   transformPayload: payload => ({
     id: payload.user.id,
     name: payload.user.first_name,
