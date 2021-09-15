@@ -1,3 +1,4 @@
 import dashboard from './dashboard'
+import settings from './settings'
 
-export default [dashboard]
+export default [dashboard, settings]

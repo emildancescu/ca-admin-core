@@ -9,6 +9,7 @@ import {
   Checkbox,
   Upload,
   TimePicker,
+  AutoComplete,
 } from 'antd'
 import moment from 'moment'
 import _ from 'lodash'
@@ -200,7 +201,7 @@ class Form extends React.Component {
           />
         )
       case 'textarea':
-        return <Input.TextArea placeholder={placeholder} disabled={disabled} />
+        return <Input.TextArea placeholder={placeholder} disabled={disabled} {...rest} />
       case 'checkbox':
         return <Checkbox>{placeholder}</Checkbox>
       case 'file':
@@ -209,12 +210,24 @@ class Form extends React.Component {
             <Button icon="upload">{placeholder}</Button>
           </Upload>
         )
+      case 'autocomplete':
+        return (
+          <AutoComplete
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={() => this.handleOnChange(field)}
+            {...rest}
+          />
+        )
+      case 'custom':
+        return null
       default:
         return (
           <Input
             placeholder={placeholder}
             disabled={disabled}
             onChange={() => this.handleOnChange(field)}
+            {...rest}
           />
         )
     }
@@ -232,13 +245,17 @@ class Form extends React.Component {
   }
 
   getFormItem = (itemConfig, isSubItem) => {
-    const {
-      form: { getFieldDecorator },
-      errors,
-      values,
-    } = this.props
-    const { field, label, type, rules, items } = itemConfig
+    const { form, errors, values } = this.props
+    const { field, label, type, rules, items, render } = itemConfig
     let { props, initialValue } = itemConfig
+
+    if (type === 'custom') {
+      return (
+        <AntForm.Item key={field} label={label} {...props}>
+          {render && render(form)}
+        </AntForm.Item>
+      )
+    }
 
     // adjust value prop name, depending on input type
     const extraProps = this.getExtraProps(type)
@@ -292,7 +309,7 @@ class Form extends React.Component {
 
     return (
       <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>
-        {!items && getFieldDecorator(field, fieldDecoratorOptions)(this.getItem(itemConfig))}
+        {!items && form.getFieldDecorator(field, fieldDecoratorOptions)(this.getItem(itemConfig))}
         {items && items.map(subItemConfig => this.getFormItem(subItemConfig, true))}
       </AntForm.Item>
     )

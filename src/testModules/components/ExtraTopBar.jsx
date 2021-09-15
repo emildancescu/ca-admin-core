@@ -1,9 +1,16 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 
-const ExtraTopBar = props => {
-  console.log('ExtraTopBar with Redux Store', props)
+@connect(({ user }) => ({ user }))
+class ExtraTopBar extends React.Component {
+  componentDidMount() {
+    console.log('extra mounted')
+  }
 
-  return <div style={{ display: 'inline-flex' }}>Company</div>
+  render() {
+    const { user } = this.props
+    return <div>Extra: {user.name}</div>
+  }
 }
 
 export default ExtraTopBar
