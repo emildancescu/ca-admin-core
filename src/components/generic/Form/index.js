@@ -86,7 +86,7 @@ class Form extends React.Component {
   }
 
   getSelectItem = itemConfig => {
-    const { field, type, placeholder, options, disabled } = itemConfig
+    const { field, type, placeholder, options, disabled, ...rest } = itemConfig
 
     const select = mode => (
       <Select
@@ -98,6 +98,7 @@ class Form extends React.Component {
         filterOption={(input, option) =>
           option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
+        {...rest}
       >
         {options.map(option => {
           const isString = !_.isObject(option)
