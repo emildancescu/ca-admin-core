@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 @connect(({ user }) => ({ user }))
 class ExtraTopBar extends React.Component {
   componentDidMount() {
-    console.log('extra mounted')
+    // console.log('extra mounted')
   }
 
   render() {
