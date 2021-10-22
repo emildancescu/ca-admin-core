@@ -8,8 +8,6 @@ import net from 'utils/net'
 import RemoteFilter from './remoteFilter'
 import ColumnSelector from './columnSelector'
 
-let render = 0
-
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
   state = {
@@ -43,6 +41,23 @@ class DataTable extends React.Component {
     const { filters, loadActionPayload, columns } = this.props
     let { params } = this.state
 
+    const defaultSortableColumns = columns.filter(
+      column => column.defaultSortOrder && column.dataIndex,
+    )
+
+    // define default sorter, if none already specified by user
+    if (defaultSortableColumns.length > 0 && !params.sorter) {
+      const col = defaultSortableColumns[0]
+
+      params = {
+        ...params,
+        sorter: {
+          field: col.dataIndex,
+          order: col.defaultSortOrder === 'ascend' ? 'ASC' : 'DESC',
+        },
+      }
+    }
+
     // if filters have been set as a prop, merge with the ones from state
     if (filters) {
       params = {
@@ -59,41 +74,6 @@ class DataTable extends React.Component {
       params = {
         ...params,
         ...loadActionPayload,
-      }
-    }
-
-    // Add defaultSorter just once before load()
-    // Currently all APIs and this table support just 1 sorter
-    if (render === 1) {
-      const cols = columns.filter(column => column.defaultSortOrder)
-
-      if (cols.length > 1) {
-        throw new Error(
-          `DataTable component has too many columns with "defaultSortOrder".
-          Only 1 column can have "defaultSortOrder"
-          ${JSON.stringify(cols, null, '\t')} `,
-        )
-      }
-
-      if (cols.length === 1) {
-        params = {
-          ...params,
-          sorter: {
-            field: cols[0].dataIndex || cols[0].key,
-            order: cols[0].defaultSortOrder === 'ascend' ? 'ASC' : 'DESC',
-          },
-        }
-
-        this.setState(prevState => {
-          const newState = { ...prevState }
-
-          newState.params.sorter = {
-            field: cols[0].dataIndex || cols[0].key,
-            order: cols[0].defaultSortOrder === 'ascend' ? 'ASC' : 'DESC',
-          }
-
-          return newState
-        })
       }
     }
 
@@ -392,15 +372,6 @@ class DataTable extends React.Component {
         </Col>
       </Row>
     )
-
-    // Needed for this.getParams()
-    if (render > 9) {
-      // 0 does nothing
-      // 1 is for injecting default sorter
-      render = 2
-    } else {
-      render += 1
-    }
 
     return (
       <div>
