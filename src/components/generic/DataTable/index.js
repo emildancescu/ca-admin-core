@@ -38,8 +38,25 @@ class DataTable extends React.Component {
   }
 
   getParams = () => {
-    const { filters, loadActionPayload } = this.props
+    const { filters, loadActionPayload, columns } = this.props
     let { params } = this.state
+
+    const defaultSortableColumns = columns.filter(
+      column => column.defaultSortOrder && column.dataIndex,
+    )
+
+    // define default sorter, if none already specified by user
+    if (defaultSortableColumns.length > 0 && !params.sorter) {
+      const col = defaultSortableColumns[0]
+
+      params = {
+        ...params,
+        sorter: {
+          field: col.dataIndex,
+          order: col.defaultSortOrder === 'ascend' ? 'ASC' : 'DESC',
+        },
+      }
+    }
 
     // if filters have been set as a prop, merge with the ones from state
     if (filters) {
@@ -65,7 +82,6 @@ class DataTable extends React.Component {
 
   load = () => {
     const { dispatch, loadAction } = this.props
-
     dispatch(loadAction(this.getParams()))
   }
 

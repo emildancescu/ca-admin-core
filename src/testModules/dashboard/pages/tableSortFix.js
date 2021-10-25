@@ -130,6 +130,8 @@ class Table extends React.Component {
         title: 'id',
         dataIndex: 'id',
         sorter: true,
+        // Only 1 column allowed with this prop
+        defaultSortOrder: 'ascend',
       },
       {
         title: 'first_name',
