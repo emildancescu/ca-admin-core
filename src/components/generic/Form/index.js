@@ -39,6 +39,16 @@ const formTailLayoutSmall = {
 
 @AntForm.create()
 class Form extends React.Component {
+  processValues = values => {
+    const processed = {}
+
+    Object.keys(values).forEach(key => {
+      processed[key] = _.isUndefined(values[key]) ? null : values[key]
+    })
+
+    return processed
+  }
+
   handleSubmit = e => {
     e.preventDefault()
 
@@ -46,7 +56,7 @@ class Form extends React.Component {
 
     form.validateFields((errors, values) => {
       if (!errors && onSubmit) {
-        onSubmit(values)
+        onSubmit(this.processValues(values))
       } else if (onError) {
         onError(errors)
       }
