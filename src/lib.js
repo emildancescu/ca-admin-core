@@ -12,6 +12,12 @@ export { default as Map } from 'components/generic/Map'
 export { default as QRScanner } from 'components/generic/QRScanner'
 
 export { request, networkActions, extraNetworkActions } from 'redux/network/actions'
+export {
+  setSystemRoles,
+  setDynamicRoles,
+  setSystemPermissions,
+  setDynamicPermissions,
+} from 'redux/user/actions'
 
 export { getToken, getBaseAuthHeaders } from 'utils/auth'
 

@@ -8,6 +8,7 @@ export default {
       key: 'settings',
       url: '/settings',
       icon: 'icmn icmn-cog',
+      roles: ['dynamic-role'],
     },
   ],
   routes: [
