@@ -1,9 +1,11 @@
 import { all, takeEvery, put, select } from 'redux-saga/effects'
 import { notification } from 'antd'
 import store from 'store'
-import _ from 'lodash'
+
 import { login as apiLogin } from 'services/api'
 import request from 'redux/network/actions'
+import { checkAccess } from 'utils/auth'
+
 import actions from './actions'
 
 const getUser = state => state.user
@@ -26,7 +28,7 @@ function success(adminRoles) {
     const user = yield select(getUser)
 
     // check if user has any other role besides "client"
-    if (user && user.roles && _.intersection(user.roles, adminRoles).length === 0) {
+    if (user && !checkAccess(adminRoles, user.roles)) {
       // and force logout if not
       yield LOGOUT()
     } else {

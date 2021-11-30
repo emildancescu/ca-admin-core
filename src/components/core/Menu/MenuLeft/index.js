@@ -5,6 +5,9 @@ import { Menu, Layout } from 'antd'
 import store from 'store'
 import { Scrollbars } from 'react-custom-scrollbars'
 import _ from 'lodash'
+
+import { checkAccess } from 'utils/auth'
+
 import styles from './style.module.scss'
 
 const { Sider } = Layout
@@ -108,19 +111,11 @@ class MenuLeft extends React.Component {
     const {
       menu = [],
       badges,
-      user: {
-        roles: userRoles, // Array of strings
-        permissions: userPermissions, // string
-      },
+      user: { roles: userRoles, permissions: userPermissions },
     } = this.props
 
-    const isAuthorized = (roles, permission) => {
-      // Permission first approach
-      if (userPermissions && permission) {
-        return _.includes(userPermissions, permission) || _.isUndefined(permission)
-      }
-      // intersection of roles and userRoles must have at least one element
-      return _.intersection(roles, userRoles).length > 0 || roles.length === 0
+    const isAuthorized = (roles, permissions) => {
+      return checkAccess(roles, userRoles) && checkAccess(permissions, userPermissions)
     }
 
     const generateItem = item => {
@@ -170,9 +165,9 @@ class MenuLeft extends React.Component {
 
     const generateSubmenu = items =>
       items.map(menuItem => {
-        const { title, icon, key, children, roles = [], permission } = menuItem
+        const { title, icon, key, children, roles, permissions } = menuItem
 
-        if (!isAuthorized(roles, permission)) {
+        if (!isAuthorized(roles, permissions)) {
           return null
         }
 

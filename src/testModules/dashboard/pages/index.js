@@ -1,12 +1,16 @@
 import React from 'react'
-import { Card } from 'antd'
+import { Card, Button } from 'antd'
+import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { FormattedMessage } from 'react-intl'
-import { Form } from 'lib'
 import { Link } from 'react-router-dom'
+
+import { Form, setDynamicRoles } from 'lib'
+
 import TableFix from './tableSortFix'
 import RemoteSelectUsers from './remoteSelectUsers'
 
+@connect()
 class Dashboard extends React.Component {
   onSubmit = values => {
     console.log(values)
@@ -14,6 +18,12 @@ class Dashboard extends React.Component {
 
   onChange = (field, values) => {
     console.log('changed value', field, values[field])
+  }
+
+  handleAddDynamicRole = () => {
+    const { dispatch } = this.props
+
+    dispatch(setDynamicRoles([{ name: 'dynamic-role' }]))
   }
 
   render() {
@@ -146,6 +156,10 @@ class Dashboard extends React.Component {
         </Card>
 
         <TableFix />
+
+        <Card className="mt-4" title={<strong className="text-uppercase">Permissions</strong>}>
+          <Button onClick={this.handleAddDynamicRole}>Add dynamic role</Button>
+        </Card>
       </>
     )
   }
