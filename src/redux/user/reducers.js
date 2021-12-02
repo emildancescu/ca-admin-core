@@ -23,8 +23,6 @@ const initialState = store.get('app.user') || defaultUser
 
 const userReducer = config => (state = initialState, action) => {
   const { transformPayload } = config
-  const transformedPayload = transformPayload(action.payload)
-  const { roles, permissions, ...rest } = transformedPayload
 
   switch (action.type) {
     case actions.REQUEST:
