@@ -37,11 +37,9 @@ const userReducer = config => (state = initialState, action) => {
         ...state,
         authorized: true,
         loading: false,
-        roles,
-        systemRoles: roles,
-        permissions,
-        systemPermissions: permissions,
-        ...rest,
+        ...transformPayload(action.payload),
+        systemRoles: transformPayload(action.payload).roles,
+        systemPermissions: transformPayload(action.payload).permissions,
       }
     case actions.ERROR:
       return {
@@ -54,26 +52,26 @@ const userReducer = config => (state = initialState, action) => {
     case actions.SET_SYSTEM_ROLES:
       return {
         ...state,
-        systemRoles: roles,
-        roles: [...roles, ...state.dynamicRoles],
+        systemRoles: transformPayload(action.payload).roles,
+        roles: [...transformPayload(action.payload).roles, ...state.dynamicRoles],
       }
     case actions.SET_DYNAMIC_ROLES:
       return {
         ...state,
-        dynamicRoles: roles,
-        roles: [...state.systemRoles, ...roles],
+        dynamicRoles: transformPayload(action.payload).roles,
+        roles: [...state.systemRoles, ...transformPayload(action.payload).roles],
       }
     case actions.SET_SYSTEM_PERMISSIONS:
       return {
         ...state,
-        systemPermissions: permissions,
-        permissions: [...permissions, ...state.dynamicPermissions],
+        systemPermissions: transformPayload(action.payload).permissions,
+        permissions: [...transformPayload(action.payload).permissions, ...state.dynamicPermissions],
       }
     case actions.SET_DYNAMIC_PERMISSIONS:
       return {
         ...state,
-        dynamicPermissions: permissions,
-        permissions: [...state.systemPermissions, ...permissions],
+        dynamicPermissions: transformPayload(action.payload).permissions,
+        permissions: [...state.systemPermissions, ...transformPayload(action.payload).permissions],
       }
     default:
       return state
