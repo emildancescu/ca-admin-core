@@ -1,0 +1,10 @@
+.auth-lock {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  opacity: .3;
+}
+
+.auth-lock:hover {
+  opacity: 1;
+}
