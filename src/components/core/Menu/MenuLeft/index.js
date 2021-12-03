@@ -59,7 +59,7 @@ const DebugLock = props => {
   return (
     <Icon
       type="lock"
-      style={{ backgroundColor: 'rgba(255, 255, 255, .7)', borderRadius: 5, padding: 3, color }}
+      style={{ backgroundColor: 'rgba(255, 255, 255, .8)', borderRadius: 5, padding: 3, color }}
       className="ml-2"
     />
   )
@@ -268,23 +268,26 @@ class MenuLeft extends React.Component {
             </span>
           )
 
-          const subMenuTitle = isDebug ? (
-            <Popover
-              title={<DebugPopoverTitle isAuthorized={authorized} />}
-              content={<DebugPopoverContent permissions={permissions} roles={roles} />}
-            >
-              {titleComponent}
-            </Popover>
-          ) : (
-            titleComponent
-          )
+          if (isDebug) {
+            return (
+              <Popover
+                title={<DebugPopoverTitle isAuthorized={authorized} />}
+                content={<DebugPopoverContent permissions={permissions} roles={roles} />}
+              >
+                <SubMenu title={titleComponent} key={key}>
+                  {generateSubmenu(children)}
+                </SubMenu>
+              </Popover>
+            )
+          }
 
           return (
-            <SubMenu title={subMenuTitle} key={key}>
+            <SubMenu title={titleComponent} key={key}>
               {generateSubmenu(children)}
             </SubMenu>
           )
         }
+
         return generateItem(menuItem)
       })
 
