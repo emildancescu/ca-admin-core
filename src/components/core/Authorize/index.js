@@ -17,7 +17,7 @@ const DebugContainer = props => {
   const style = {
     display: 'inherit',
     position: 'relative',
-    outline: `1px solid ${color}`,
+    boxShadow: `0px 0px 0px 1px ${color} inset`,
     padding: 5,
     borderRadius: 5,
   }
