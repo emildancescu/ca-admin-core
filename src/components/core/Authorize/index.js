@@ -5,8 +5,9 @@ import { Icon, notification, Popover, Tag } from 'antd'
 
 import { checkAccess } from 'utils/auth'
 
-const isDebug =
-  process.env.NODE_ENV === 'development' && process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
+import './style.css'
+
+const isDebug = process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
 
 const DebugContainer = props => {
   const { isAuthorized, permissions, roles, children } = props
@@ -14,16 +15,14 @@ const DebugContainer = props => {
   const color = isAuthorized ? 'green' : 'red'
 
   const style = {
-    display: 'inline-block',
+    display: 'inherit',
     position: 'relative',
-    border: `1px solid ${color}`,
+    boxShadow: `0px 0px 0px 1px ${color} inset`,
     padding: 5,
     borderRadius: 5,
   }
 
   const lockStyle = {
-    position: 'absolute',
-    right: -20,
     color,
   }
 
@@ -33,7 +32,9 @@ const DebugContainer = props => {
         <div>
           <b>Roles:</b>{' '}
           {roles.map(role => (
-            <Tag className="mb-1">{role}</Tag>
+            <Tag key={role} className="mb-1">
+              {role}
+            </Tag>
           ))}
         </div>
       )}
@@ -41,7 +42,9 @@ const DebugContainer = props => {
         <div>
           <b>Permissions:</b>{' '}
           {permissions.map(perm => (
-            <Tag className="mb-1">{perm}</Tag>
+            <Tag key={perm} className="mb-1">
+              {perm}
+            </Tag>
           ))}
         </div>
       )}
@@ -57,7 +60,7 @@ const DebugContainer = props => {
   return (
     <div style={style}>
       <Popover title={title} content={content}>
-        <div style={lockStyle}>
+        <div style={lockStyle} className="auth-lock">
           <Icon type="lock" />
         </div>
       </Popover>
@@ -111,6 +114,7 @@ class Authorize extends React.Component {
       // if access is successful render children
       return <>{children}</>
     }
+
     return AuthorizedChildren()
   }
 }
