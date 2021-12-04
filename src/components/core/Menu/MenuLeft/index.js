@@ -13,8 +13,7 @@ import styles from './style.module.scss'
 const { Sider } = Layout
 const { SubMenu, Divider } = Menu
 
-const isDebug =
-  process.env.NODE_ENV === 'development' && process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
+const isDebug = process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
 
 const DebugPopoverTitle = props => {
   const { isAuthorized } = props
@@ -53,16 +52,19 @@ const DebugPopoverContent = props => {
 }
 
 const DebugLock = props => {
-  const { isAuthorized } = props
+  const { isAuthorized, ...rest } = props
   const color = isAuthorized ? 'green' : 'red'
+  const style = {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 2,
+    color,
+    position: 'absolute',
+    right: -40,
+    top: 0,
+  }
 
-  return (
-    <Icon
-      type="lock"
-      style={{ backgroundColor: 'rgba(255, 255, 255, .8)', borderRadius: 5, padding: 3, color }}
-      className="ml-2"
-    />
-  )
+  return <Icon {...rest} type="lock" style={style} className="ml-2" />
 }
 
 const mapStateToProps = ({ menu, settings, user }) => ({
@@ -179,13 +181,23 @@ class MenuLeft extends React.Component {
 
       const authorized = isAuthorized(roles, permissions)
 
+      const debugPopover = isDebug && (
+        <Popover
+          title={<DebugPopoverTitle isAuthorized={authorized} />}
+          content={<DebugPopoverContent permissions={permissions} roles={roles} />}
+          zIndex={1050}
+        >
+          <DebugLock isAuthorized={authorized} />
+        </Popover>
+      )
+
       if (item.url) {
         const itemWithUrl = item.target ? (
           <a href={url} target={item.target} rel="noopener noreferrer">
             {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
             <span className={styles.title}>
               {title}
-              {isDebug && <DebugLock isAuthorized={isAuthorized(roles, permissions)} />}
+              {debugPopover}
             </span>
             {badge && (
               <span className="badge badge-light badge-collapsed-hidden ml-2">{badges[badge]}</span>
@@ -196,7 +208,7 @@ class MenuLeft extends React.Component {
             {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
             <span className={styles.title}>
               {title}
-              {isDebug && <DebugLock isAuthorized={isAuthorized(roles, permissions)} />}
+              {debugPopover}
             </span>
             {badge && (
               <span className="badge badge-light badge-collapsed-hidden ml-2">{badges[badge]}</span>
@@ -206,16 +218,7 @@ class MenuLeft extends React.Component {
 
         return (
           <Menu.Item key={key} disabled={disabled}>
-            {isDebug && (
-              <Popover
-                title={<DebugPopoverTitle isAuthorized={authorized} />}
-                content={<DebugPopoverContent permissions={permissions} roles={roles} />}
-              >
-                {itemWithUrl}
-              </Popover>
-            )}
-
-            {!isDebug && itemWithUrl}
+            {itemWithUrl}
           </Menu.Item>
         )
       }
@@ -225,24 +228,13 @@ class MenuLeft extends React.Component {
           {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
           <span className={styles.title}>
             {title}
-            {isDebug && <DebugLock isAuthorized={isAuthorized(roles, permissions)} />}
+            {debugPopover}
           </span>
           {badge && (
             <span className="badge badge-light badge-collapsed-hidden ml-2">{badges[badge]}</span>
           )}
         </Menu.Item>
       )
-
-      if (isDebug) {
-        return (
-          <Popover
-            title={<DebugPopoverTitle isAuthorized={authorized} />}
-            content={<DebugPopoverContent permissions={permissions} roles={roles} />}
-          >
-            {normalItem}
-          </Popover>
-        )
-      }
 
       return normalItem
     }
@@ -257,29 +249,26 @@ class MenuLeft extends React.Component {
           return null
         }
 
+        const debugPopover = isDebug && (
+          <Popover
+            title={<DebugPopoverTitle isAuthorized={authorized} />}
+            content={<DebugPopoverContent permissions={permissions} roles={roles} />}
+            zIndex={1050}
+          >
+            <DebugLock isAuthorized={authorized} />
+          </Popover>
+        )
+
         if (children) {
           const titleComponent = (
             <span key={key}>
               <span className={styles.title}>
                 {title}
-                {isDebug && <DebugLock isAuthorized={isAuthorized(roles, permissions)} />}
+                {debugPopover}
               </span>
               {icon && <span className={`${icon} ${styles.icon}`} />}
             </span>
           )
-
-          if (isDebug) {
-            return (
-              <Popover
-                title={<DebugPopoverTitle isAuthorized={authorized} />}
-                content={<DebugPopoverContent permissions={permissions} roles={roles} />}
-              >
-                <SubMenu title={titleComponent} key={key}>
-                  {generateSubmenu(children)}
-                </SubMenu>
-              </Popover>
-            )
-          }
 
           return (
             <SubMenu title={titleComponent} key={key}>

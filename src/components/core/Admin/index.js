@@ -27,7 +27,7 @@ const routeMiddleware = routerMiddleware(history)
 const middlewares = [thunk, sagaMiddleware, routeMiddleware]
 
 // Redux Logger
-if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_REDUX_LOGGER === 'true') {
+if (process.env.REACT_APP_REDUX_LOGGER === 'true') {
   middlewares.push(logger)
 }
 

@@ -7,8 +7,7 @@ import { checkAccess } from 'utils/auth'
 
 import './style.css'
 
-const isDebug =
-  process.env.NODE_ENV === 'development' && process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
+const isDebug = process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
 
 const DebugContainer = props => {
   const { isAuthorized, permissions, roles, children } = props
