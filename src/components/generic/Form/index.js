@@ -336,7 +336,7 @@ class Form extends React.Component {
   }
 
   render() {
-    const { loading, submitText, compact, layout, submitType, children } = this.props
+    const { loading, submitText, compact, layout, submitType, submitBlock, children } = this.props
     let { config } = this.props
     let itemLayout
     let tailLayout
@@ -361,7 +361,12 @@ class Form extends React.Component {
         {children}
 
         <AntForm.Item {...tailLayout}>
-          <Button type={submitType || 'primary'} htmlType="submit" loading={loading}>
+          <Button
+            type={submitType || 'primary'}
+            htmlType="submit"
+            block={submitBlock}
+            loading={loading}
+          >
             {submitText || 'Submit'}
           </Button>
         </AntForm.Item>
