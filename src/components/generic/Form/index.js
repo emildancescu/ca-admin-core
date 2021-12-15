@@ -213,6 +213,15 @@ class Form extends React.Component {
         )
       case 'textarea':
         return <Input.TextArea placeholder={placeholder} disabled={disabled} {...rest} />
+      case 'password':
+        return (
+          <Input.Password
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={() => this.handleOnChange(field)}
+            {...rest}
+          />
+        )
       case 'checkbox':
         return <Checkbox>{placeholder}</Checkbox>
       case 'file':
