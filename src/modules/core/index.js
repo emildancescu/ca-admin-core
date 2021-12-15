@@ -1,3 +1,5 @@
+import { Loadable } from 'components/core/Router'
+
 import { API, ADMIN_ROLES } from 'utils/constants'
 
 import user from 'redux/user/reducers'
@@ -9,6 +11,7 @@ const defaultAuthConfig = {
   url: API.LOGIN,
   adminRoles: ADMIN_ROLES,
   extraParams: {},
+  overrideUi: false,
   transformPayload: payload => {
     if (!payload) return {}
 
@@ -51,6 +54,17 @@ export default (config = {}) => {
 
   return {
     name: 'core',
+    routes: [
+      ...(config.overrideUi !== true
+        ? [
+            {
+              path: '/auth/login',
+              component: Loadable(() => import('pages/auth/login')),
+              exact: true,
+            },
+          ]
+        : []),
+    ],
     reducers: { user: user(config) },
     sagas: [userSaga(config), networkSaga(config)],
   }
