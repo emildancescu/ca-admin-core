@@ -323,6 +323,7 @@ class DataTable extends React.Component {
       showColumnSelector,
       exportConfig,
       settingsKey,
+      customSearch,
       ...rest
     } = this.props
 
@@ -330,15 +331,24 @@ class DataTable extends React.Component {
 
     const extra = (
       <Row type="flex" justify="space-between">
-        <Col xs={24} sm={8}>
-          <Input.Search
-            className="mb-4"
-            placeholder="Search..."
-            onSearch={this.handleSearch}
-            value={search}
-            onChange={this.handleSearchInputChange}
-          />
-        </Col>
+        {!customSearch && (
+          <Col cs={24} sm={8}>
+            <Input.Search
+              className="mb-4"
+              placeholder="Search..."
+              onSearch={this.handleSearch}
+              value={search}
+              onChange={this.handleSearchInputChange}
+            />
+          </Col>
+        )}
+
+        {customSearch && (
+          <Col>
+            <div className="mb-4">{customSearch}</div>
+          </Col>
+        )}
+
         <Col>
           <div className="mb-4">
             <Button.Group>
