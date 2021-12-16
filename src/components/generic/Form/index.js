@@ -271,7 +271,7 @@ class Form extends React.Component {
 
     if (type === 'custom') {
       return (
-        <AntForm.Item key={field} label={label} {...props}>
+        <AntForm.Item key={field} label={label} className={isSubItem ? 'mb-0' : null} {...props}>
           {render && render(form)}
         </AntForm.Item>
       )
