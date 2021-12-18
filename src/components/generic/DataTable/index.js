@@ -345,12 +345,14 @@ class DataTable extends React.Component {
 
         {customSearch && (
           <Col>
-            <div className="mb-4">{customSearch}</div>
+            <div className="mb-4" style={{ display: 'inline-flex' }}>
+              {customSearch}
+            </div>
           </Col>
         )}
 
         <Col>
-          <div className="mb-4">
+          <div className="mb-4" style={{ display: 'inline-flex' }}>
             <Button.Group>
               <Tooltip placement="top" title="Clear all filters">
                 <Button icon="stop" onClick={this.handleClearFilters} />
