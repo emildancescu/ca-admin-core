@@ -36,7 +36,10 @@ function request(loginUrl) {
     try {
       yield put({
         type: `${action}/request`,
-        payload: {
+        payload: null,
+        infoSaga: {
+          action,
+          options,
           extra,
         },
       })
@@ -56,6 +59,14 @@ function request(loginUrl) {
 
         yield put({
           type: `${action}/error`,
+          payload: {
+            error: 'Timeout',
+          },
+          infoSaga: {
+            action,
+            options,
+            extra,
+          },
         })
 
         return
@@ -71,6 +82,11 @@ function request(loginUrl) {
         yield put({
           type: `${action}/success`,
           payload: data,
+          infoSaga: {
+            action,
+            options,
+            extra,
+          },
         })
 
         return
@@ -81,6 +97,11 @@ function request(loginUrl) {
       yield put({
         type: `${action}/error`,
         payload: data,
+        infoSaga: {
+          action,
+          options,
+          extra,
+        },
       })
 
       // check status code
@@ -118,6 +139,11 @@ function request(loginUrl) {
 
       yield put({
         type: `${action}/error`,
+        infoSaga: {
+          action,
+          options,
+          extra,
+        },
       })
     }
   }
