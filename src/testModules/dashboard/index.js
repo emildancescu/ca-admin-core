@@ -17,6 +17,11 @@ export default {
       // roles: ['admin'],
       // permission: 'menu_dashboard'
     },
+    {
+      title: 'Form initialValues',
+      key: 'formInitVals',
+      url: '/formInitVals',
+    },
   ],
   routes: [
     {
@@ -29,6 +34,11 @@ export default {
       component: Loadable(() => import('./pages/modalJumpTab')),
       exact: true,
       modal: true,
+    },
+    {
+      path: '/formInitVals',
+      component: Loadable(() => import('./pages/formInitialValues')),
+      exact: true,
     },
   ],
   locales: {

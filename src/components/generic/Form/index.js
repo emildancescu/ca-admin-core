@@ -283,15 +283,25 @@ class Form extends React.Component {
     // set field values, based on values array
     // note: initialValue will be overridden
     if (values) {
+      console.log(`---form has "values" prop`)
       if (field.includes('.')) {
         // try to get nested values assuming dot notation
         let currentValue = values
         const fieldArray = field.split('.')
 
-        while (fieldArray.length > 0) {
+        console.log(`--- currentValue`, currentValue)
+        console.log(`--- fieldArray`, fieldArray)
+
+        while (!_.isNil(currentValue) && fieldArray.length > 0) {
           currentValue = currentValue[fieldArray[0]]
           fieldArray.shift()
+
+          console.log(`--- currentValue while`, currentValue)
+          console.log(`--- fieldArray while`, fieldArray)
         }
+
+        console.log(`--- currentValue 2`, currentValue)
+        console.log(`--- fieldArray 2`, fieldArray)
 
         if (!_.isNil(currentValue) && currentValue !== '') {
           initialValue = currentValue
