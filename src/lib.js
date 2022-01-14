@@ -3,6 +3,7 @@ export { default as net } from 'utils/net' // api, postJson, putJson, get, destr
 export { default as Authorize } from 'components/core/Authorize'
 export { default as DetailsModal } from 'components/core/DetailsModal'
 export { default as Admin } from 'components/core/Admin'
+export { default as LanguageSelector } from 'components/core/TopBar/LanguageSelector'
 export { Loadable } from 'components/core/Router'
 
 export { default as ActionButton } from 'components/generic/ActionButton'
