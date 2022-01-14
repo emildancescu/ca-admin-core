@@ -3,11 +3,13 @@ import { Table, Input, Row, Col, Button, Tooltip, Icon } from 'antd'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import download from 'downloadjs'
+import { injectIntl } from 'react-intl'
 
 import net from 'utils/net'
 import RemoteFilter from './remoteFilter'
 import ColumnSelector from './columnSelector'
 
+@injectIntl
 @connect(({ settings: { isMobileView } }) => ({ isMobileView }))
 class DataTable extends React.Component {
   state = {
@@ -316,6 +318,7 @@ class DataTable extends React.Component {
     } = this.state
 
     const {
+      intl,
       dataSource: { data, loading, pagination },
       actions,
       rowDoubleClick,
@@ -335,7 +338,7 @@ class DataTable extends React.Component {
           <Col cs={24} sm={8}>
             <Input.Search
               className="mb-4"
-              placeholder="Search..."
+              placeholder={intl.formatMessage({ id: 'datatable.search' })}
               onSearch={this.handleSearch}
               value={search}
               onChange={this.handleSearchInputChange}
@@ -354,12 +357,18 @@ class DataTable extends React.Component {
         <Col>
           <div className="mb-4" style={{ display: 'inline-flex' }}>
             <Button.Group>
-              <Tooltip placement="top" title="Clear all filters">
+              <Tooltip
+                placement="top"
+                title={intl.formatMessage({ id: 'datatable.tooltips.clear' })}
+              >
                 <Button icon="stop" onClick={this.handleClearFilters} />
               </Tooltip>
-              <Tooltip placement="top" title="Reload using current filters">
+              <Tooltip
+                placement="top"
+                title={intl.formatMessage({ id: 'datatable.tooltips.refresh' })}
+              >
                 <Button icon="reload" onClick={this.handleRefresh}>
-                  Refresh
+                  {intl.formatMessage({ id: 'datatable.actions.refresh' })}
                 </Button>
               </Tooltip>
             </Button.Group>
@@ -374,7 +383,10 @@ class DataTable extends React.Component {
             )}
 
             {exportConfig && (
-              <Tooltip placement="top" title="Export Excel">
+              <Tooltip
+                placement="top"
+                title={intl.formatMessage({ id: 'datatable.tooltips.export' })}
+              >
                 <Button className="ml-2" icon="download" onClick={this.handleExportClick} />
               </Tooltip>
             )}
