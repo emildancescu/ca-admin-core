@@ -11,7 +11,6 @@ import * as serviceWorker from 'serviceWorker'
 import Router from 'components/core/Router'
 import Localization from 'components/core/Localization'
 import defaultModules from 'modules'
-import defaultRoutes from 'services/routes'
 import initReducers from 'redux/reducers'
 import initSagas from 'redux/sagas'
 
@@ -71,7 +70,7 @@ const createAdminStore = modules => {
 }
 
 const getRoutes = modules => {
-  let routes = [...defaultRoutes]
+  let routes = []
 
   modules.forEach(module => {
     if (module.routes) {

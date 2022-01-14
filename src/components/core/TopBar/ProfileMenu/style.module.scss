@@ -24,13 +24,13 @@
     @include transition-slow();
   }
 
-  &:hover {
-    color: $blue;
+  // &:hover {
+  //   color: $blue;
 
-    &::after {
-      color: $gray-darken;
-    }
-  }
+  //   &::after {
+  //     color: $gray-darken;
+  //   }
+  // }
 }
 
 .avatar {

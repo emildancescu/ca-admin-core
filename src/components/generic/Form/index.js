@@ -213,6 +213,15 @@ class Form extends React.Component {
         )
       case 'textarea':
         return <Input.TextArea placeholder={placeholder} disabled={disabled} {...rest} />
+      case 'password':
+        return (
+          <Input.Password
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={() => this.handleOnChange(field)}
+            {...rest}
+          />
+        )
       case 'checkbox':
         return <Checkbox>{placeholder}</Checkbox>
       case 'file':
@@ -262,7 +271,7 @@ class Form extends React.Component {
 
     if (type === 'custom') {
       return (
-        <AntForm.Item key={field} label={label} {...props}>
+        <AntForm.Item key={field} label={label} className={isSubItem ? 'mb-0' : null} {...props}>
           {render && render(form)}
         </AntForm.Item>
       )
@@ -327,7 +336,7 @@ class Form extends React.Component {
   }
 
   render() {
-    const { loading, submitText, compact, layout, submitType, children } = this.props
+    const { loading, submitText, compact, layout, submitType, submitBlock, children } = this.props
     let { config } = this.props
     let itemLayout
     let tailLayout
@@ -352,7 +361,12 @@ class Form extends React.Component {
         {children}
 
         <AntForm.Item {...tailLayout}>
-          <Button type={submitType || 'primary'} htmlType="submit" loading={loading}>
+          <Button
+            type={submitType || 'primary'}
+            htmlType="submit"
+            block={submitBlock}
+            loading={loading}
+          >
             {submitText || 'Submit'}
           </Button>
         </AntForm.Item>

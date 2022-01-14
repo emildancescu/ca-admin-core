@@ -7,6 +7,13 @@ const messages = {
   'topBar.profileMenu.phone': 'Phone',
   'topBar.profileMenu.refresh': 'Refresh',
   'topBar.profileMenu.logout': 'Logout',
+
+  'datatable.search': 'Search...',
+  'datatable.actions.refresh': 'Refresh',
+  'datatable.tooltips.clear': 'Clear all filters',
+  'datatable.tooltips.refresh': 'Reload using current filters',
+  'datatable.tooltips.columns': 'Toggle column visibility',
+  'datatable.tooltips.export': 'Export',
 }
 
 export default {

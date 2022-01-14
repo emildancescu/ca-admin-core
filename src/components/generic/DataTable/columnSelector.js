@@ -2,7 +2,9 @@ import React from 'react'
 import { Switch, Button, Popover, Tooltip } from 'antd'
 import isObject from 'lodash/isObject'
 import store from 'store'
+import { injectIntl } from 'react-intl'
 
+@injectIntl
 export default class ColumnSelector extends React.Component {
   componentDidMount() {
     const { onColumnSelectionChanged, settingsKey, columns } = this.props
@@ -62,7 +64,7 @@ export default class ColumnSelector extends React.Component {
 
   render() {
     let { columns } = this.props
-    const { className } = this.props
+    const { className, intl } = this.props
 
     // Filter columns based on 'excludeFromColumnSelector' prop
     columns = columns.filter(el => el.excludeFromColumnSelector !== true)
@@ -91,7 +93,7 @@ export default class ColumnSelector extends React.Component {
 
     return (
       <Popover placement="bottomRight" trigger="click" content={settings}>
-        <Tooltip placement="top" title="Toggle column visivility">
+        <Tooltip placement="top" title={intl.formatMessage({ id: 'datatable.tooltips.columns' })}>
           <Button className={className} icon="table" />
         </Tooltip>
       </Popover>
