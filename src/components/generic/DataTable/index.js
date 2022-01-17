@@ -152,6 +152,8 @@ class DataTable extends React.Component {
       params: { limit },
     } = this.state
 
+    const { onClearFilters } = this.props
+
     const params = {
       limit,
       page: 1,
@@ -159,6 +161,10 @@ class DataTable extends React.Component {
     }
 
     this.setState({ params }, () => this.load())
+
+    if (onClearFilters) {
+      onClearFilters()
+    }
   }
 
   handlePayloadChange = () => {
