@@ -1,3 +1,5 @@
 {
-  "dashboard.form.title": "Example form"
+  "dashboard.form.title": "Example form",
+  "dashboard.form.submit": "Custom submit",
+  "dashboard.table.refresh": "Refresh custom"
 }

@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Card, Button } from 'antd'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Link } from 'react-router-dom'
 
 import { Form, setDynamicRoles } from 'lib'
@@ -27,6 +28,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
+    const { intl } = this.props
+
     const config = [
       {
         label: 'Input',
@@ -130,6 +133,9 @@ class Dashboard extends React.Component {
             onSubmit={this.onSubmit}
             onChange={this.onChange}
             values={initialValues}
+            // submitText="Custom submit"
+            submitText={<FormattedMessage id="dashboard.form.submit" />}
+            // submitText={intl.formatMessage({ id: 'dashboard.form.submit' })}
           />
         </Card>
 
@@ -165,4 +171,4 @@ class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard
+export default injectIntl(Dashboard)

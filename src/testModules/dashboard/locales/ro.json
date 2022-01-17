@@ -1,3 +1,5 @@
 {
-  "dashboard.form.title": "Exemplu formular"
+  "dashboard.form.title": "Exemplu formular",
+  "dashboard.form.submit": "Submit personalizat",
+  "dashboard.table.refresh": "Refresh personalizat"
 }

@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import { DataTable, net, getToken } from 'lib'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Card, Radio, Tag } from 'antd'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { load } from '../list/actions'
 
 const { api, get } = net
@@ -109,7 +111,7 @@ class Table extends React.Component {
   }
 
   render() {
-    const { users } = this.props
+    const { users, intl } = this.props
 
     const { view } = this.state
 
@@ -167,10 +169,17 @@ class Table extends React.Component {
           loadAction={load}
           showColumnSelector
           settingsKey="users"
+          // refreshText="Refresh custom"
+          refreshText={
+            <span style={{ marginLeft: 8 }}>
+              <FormattedMessage id="dashboard.table.refresh" />
+            </span>
+          }
+          // refreshText={intl.formatMessage({ id: 'dashboard.table.refresh' })}
         />
       </Card>
     )
   }
 }
 
-export default Table
+export default injectIntl(Table)

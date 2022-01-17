@@ -323,6 +323,7 @@ class DataTable extends React.Component {
       showColumnSelector,
       exportConfig,
       settingsKey,
+      refreshText,
       ...rest
     } = this.props
 
@@ -347,7 +348,7 @@ class DataTable extends React.Component {
               </Tooltip>
               <Tooltip placement="top" title="Reload using current filters">
                 <Button icon="reload" onClick={this.handleRefresh}>
-                  Refresh
+                  {refreshText || 'Refresh'}
                 </Button>
               </Tooltip>
             </Button.Group>
