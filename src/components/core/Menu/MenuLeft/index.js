@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
-import { Menu, Layout } from 'antd'
+import { Menu, Layout, Icon, Tag, Popover } from 'antd'
 import store from 'store'
 import { Scrollbars } from 'react-custom-scrollbars'
 import _ from 'lodash'
@@ -12,6 +12,60 @@ import styles from './style.module.scss'
 
 const { Sider } = Layout
 const { SubMenu, Divider } = Menu
+
+const isDebug = process.env.REACT_APP_PERMISSIONS_DEBUG === 'true'
+
+const DebugPopoverTitle = props => {
+  const { isAuthorized } = props
+  const color = isAuthorized ? 'green' : 'red'
+
+  return (
+    <span style={{ color, fontWeight: 'bold' }}>
+      {isAuthorized ? 'Authorized' : 'Not authorized'}
+    </span>
+  )
+}
+
+const DebugPopoverContent = props => {
+  const { permissions, roles } = props
+
+  return (
+    <>
+      {roles && (
+        <div>
+          <b>Roles:</b>{' '}
+          {roles.map(role => (
+            <Tag className="mb-1">{role}</Tag>
+          ))}
+        </div>
+      )}
+      {permissions && (
+        <div>
+          <b>Permissions:</b>{' '}
+          {permissions.map(perm => (
+            <Tag className="mb-1">{perm}</Tag>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}
+
+const DebugLock = props => {
+  const { isAuthorized, ...rest } = props
+  const color = isAuthorized ? 'green' : 'red'
+  const style = {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 2,
+    color,
+    position: 'absolute',
+    right: -40,
+    top: 0,
+  }
+
+  return <Icon {...rest} type="lock" style={style} className="ml-2" />
+}
 
 const mapStateToProps = ({ menu, settings, user }) => ({
   user,
@@ -119,71 +173,110 @@ class MenuLeft extends React.Component {
     }
 
     const generateItem = item => {
-      const { key, title, url, icon, disabled, badge } = item
+      const { key, title, url, icon, disabled, badge, roles, permissions } = item
 
       if (item.divider) {
         return <Divider key={Math.random()} />
       }
 
+      const authorized = isAuthorized(roles, permissions)
+
+      const debugPopover = isDebug && (
+        <Popover
+          title={<DebugPopoverTitle isAuthorized={authorized} />}
+          content={<DebugPopoverContent permissions={permissions} roles={roles} />}
+          zIndex={1050}
+        >
+          <DebugLock isAuthorized={authorized} />
+        </Popover>
+      )
+
       if (item.url) {
+        const itemWithUrl = item.target ? (
+          <a href={url} target={item.target} rel="noopener noreferrer">
+            {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
+            <span className={styles.title}>
+              {title}
+              {debugPopover}
+            </span>
+            {badge && (
+              <span className="badge badge-light badge-collapsed-hidden ml-2">{badges[badge]}</span>
+            )}
+          </a>
+        ) : (
+          <Link to={url}>
+            {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
+            <span className={styles.title}>
+              {title}
+              {debugPopover}
+            </span>
+            {badge && (
+              <span className="badge badge-light badge-collapsed-hidden ml-2">{badges[badge]}</span>
+            )}
+          </Link>
+        )
+
         return (
           <Menu.Item key={key} disabled={disabled}>
-            {item.target ? (
-              <a href={url} target={item.target} rel="noopener noreferrer">
-                {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
-                <span className={styles.title}>{title}</span>
-                {badge && (
-                  <span className="badge badge-light badge-collapsed-hidden ml-2">
-                    {badges[badge]}
-                  </span>
-                )}
-              </a>
-            ) : (
-              <Link to={url}>
-                {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
-                <span className={styles.title}>{title}</span>
-                {badge && (
-                  <span className="badge badge-light badge-collapsed-hidden ml-2">
-                    {badges[badge]}
-                  </span>
-                )}
-              </Link>
-            )}
+            {itemWithUrl}
           </Menu.Item>
         )
       }
-      return (
+
+      const normalItem = (
         <Menu.Item key={key} disabled={disabled}>
           {icon && <span className={`${icon} ${styles.icon} icon-collapsed-hidden`} />}
-          <span className={styles.title}>{title}</span>
+          <span className={styles.title}>
+            {title}
+            {debugPopover}
+          </span>
           {badge && (
             <span className="badge badge-light badge-collapsed-hidden ml-2">{badges[badge]}</span>
           )}
         </Menu.Item>
       )
+
+      return normalItem
     }
 
     const generateSubmenu = items =>
       items.map(menuItem => {
         const { title, icon, key, children, roles, permissions } = menuItem
 
-        if (!isAuthorized(roles, permissions)) {
+        const authorized = isAuthorized(roles, permissions)
+
+        if (!isDebug && !authorized) {
           return null
         }
 
+        const debugPopover = isDebug && (
+          <Popover
+            title={<DebugPopoverTitle isAuthorized={authorized} />}
+            content={<DebugPopoverContent permissions={permissions} roles={roles} />}
+            zIndex={1050}
+          >
+            <DebugLock isAuthorized={authorized} />
+          </Popover>
+        )
+
         if (children) {
-          const subMenuTitle = (
+          const titleComponent = (
             <span key={key}>
-              <span className={styles.title}>{title}</span>
+              <span className={styles.title}>
+                {title}
+                {debugPopover}
+              </span>
               {icon && <span className={`${icon} ${styles.icon}`} />}
             </span>
           )
+
           return (
-            <SubMenu title={subMenuTitle} key={key}>
+            <SubMenu title={titleComponent} key={key}>
               {generateSubmenu(children)}
             </SubMenu>
           )
         }
+
         return generateItem(menuItem)
       })
 
