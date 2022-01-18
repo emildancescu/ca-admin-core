@@ -31,7 +31,7 @@ class DataTable extends React.Component {
 
     if (!_.isEqual(prevProps.filters, filters)) {
       // reload if prop filters have changed, while also clearing previous filters
-      this.handleClearFilters()
+      this.clearFilters()
     }
 
     if (!_.isEqual(prevProps.loadActionPayload, loadActionPayload)) {
