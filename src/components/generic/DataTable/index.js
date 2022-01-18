@@ -147,12 +147,10 @@ class DataTable extends React.Component {
     })
   }
 
-  handleClearFilters = () => {
+  clearFilters = () => {
     const {
       params: { limit },
     } = this.state
-
-    const { onClearFilters } = this.props
 
     const params = {
       limit,
@@ -161,6 +159,12 @@ class DataTable extends React.Component {
     }
 
     this.setState({ params }, () => this.load())
+  }
+
+  handleClearFilters = () => {
+    const { onClearFilters } = this.props
+
+    this.clearFilters()
 
     if (onClearFilters) {
       onClearFilters()
