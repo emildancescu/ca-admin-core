@@ -31,10 +31,10 @@ class LanguageSelector extends React.Component {
           English
         </Menu.Item>
         <Menu.Item key="ro">
-          <span role="img" aria-label="Romana" className="mr-2">
+          <span role="img" aria-label="Romanian" className="mr-2">
             🇷🇴
           </span>
-          Romana
+          Română
         </Menu.Item>
         <Menu.Item key="uk">
           <span role="img" aria-label="Ukrainean" className="mr-2">

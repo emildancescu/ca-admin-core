@@ -8,12 +8,12 @@ const messages = {
   'topBar.profileMenu.refresh': 'Обновить',
   'topBar.profileMenu.logout': 'Выход',
 
-  'datatable.search': 'Search...',
-  'datatable.actions.refresh': 'Refresh',
-  'datatable.tooltips.clear': 'Clear all filters',
-  'datatable.tooltips.refresh': 'Reload using current filters',
-  'datatable.tooltips.columns': 'Toggle column visibility',
-  'datatable.tooltips.export': 'Export',
+  'datatable.search': 'Поиск...',
+  'datatable.actions.refresh': 'Обновить',
+  'datatable.tooltips.clear': 'Очистить все фильтры',
+  'datatable.tooltips.refresh': 'Перезагрузить с использованием текущих фильтров',
+  'datatable.tooltips.columns': 'Переключить видимость столбцов',
+  'datatable.tooltips.export': 'Экспортировать',
 }
 
 export default {
