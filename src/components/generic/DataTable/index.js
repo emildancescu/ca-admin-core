@@ -344,7 +344,7 @@ class DataTable extends React.Component {
 
     const extra = (
       <Row type="flex" justify="space-between">
-        {!customSearch && (
+        {_.isUndefined(customSearch) && (
           <Col cs={24} sm={8}>
             <Input.Search
               className="mb-4"
@@ -356,7 +356,7 @@ class DataTable extends React.Component {
           </Col>
         )}
 
-        {customSearch && (
+        {!_.isUndefined(customSearch) && (
           <Col>
             <div className="mb-4" style={{ display: 'inline-flex' }}>
               {customSearch}
