@@ -292,22 +292,8 @@ class Form extends React.Component {
     // set field values, based on values array
     // note: initialValue will be overridden
     if (values) {
-      if (field.includes('.')) {
-        // try to get nested values assuming dot notation
-        let currentValue = values
-        const fieldArray = field.split('.')
-
-        while (fieldArray.length > 0) {
-          currentValue = currentValue[fieldArray[0]]
-          fieldArray.shift()
-        }
-
-        if (!_.isNil(currentValue) && currentValue !== '') {
-          initialValue = currentValue
-        }
-      } else if (!_.isNil(values[field]) && values[field] !== '') {
-        initialValue = values[field]
-      }
+      // This should enable field names like: 'a[0].b.c' to support arrays and objects
+      initialValue = _.get(values, field)
 
       if (type === 'date' && initialValue) {
         initialValue = moment(initialValue)
