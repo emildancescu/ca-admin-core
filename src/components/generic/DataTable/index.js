@@ -31,7 +31,7 @@ class DataTable extends React.Component {
 
     if (!_.isEqual(prevProps.filters, filters)) {
       // reload if prop filters have changed, while also clearing previous filters
-      this.handleClearFilters()
+      this.clearFilters()
     }
 
     if (!_.isEqual(prevProps.loadActionPayload, loadActionPayload)) {
@@ -147,7 +147,7 @@ class DataTable extends React.Component {
     })
   }
 
-  handleClearFilters = () => {
+  clearFilters = () => {
     const {
       params: { limit },
     } = this.state
@@ -159,6 +159,16 @@ class DataTable extends React.Component {
     }
 
     this.setState({ params }, () => this.load())
+  }
+
+  handleClearFilters = () => {
+    const { onClearFilters } = this.props
+
+    this.clearFilters()
+
+    if (onClearFilters) {
+      onClearFilters()
+    }
   }
 
   handlePayloadChange = () => {
@@ -334,7 +344,7 @@ class DataTable extends React.Component {
 
     const extra = (
       <Row type="flex" justify="space-between">
-        {!customSearch && (
+        {_.isUndefined(customSearch) && (
           <Col cs={24} sm={8}>
             <Input.Search
               className="mb-4"
@@ -346,7 +356,7 @@ class DataTable extends React.Component {
           </Col>
         )}
 
-        {customSearch && (
+        {!_.isUndefined(customSearch) && (
           <Col>
             <div className="mb-4" style={{ display: 'inline-flex' }}>
               {customSearch}
