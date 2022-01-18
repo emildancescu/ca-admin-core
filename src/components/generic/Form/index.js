@@ -284,7 +284,7 @@ class Form extends React.Component {
     // note: initialValue will be overridden
     if (values) {
       // This should enable field names like: 'a[0].b.c' to support arrays and objects
-      initialValue = _.get(values, field, undefined)
+      initialValue = _.get(values, field)
 
       if (type === 'date' && initialValue) {
         initialValue = moment(initialValue)
