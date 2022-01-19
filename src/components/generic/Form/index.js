@@ -10,6 +10,8 @@ import {
   Upload,
   TimePicker,
   AutoComplete,
+  Row,
+  Col,
 } from 'antd'
 import moment from 'moment'
 import _ from 'lodash'
@@ -24,17 +26,8 @@ const formItemLayout = {
   wrapperCol: { md: 12 },
 }
 
-const formItemLayoutSmall = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 },
-}
-
 const formTailLayout = {
   wrapperCol: { md: { span: 16, offset: 8 } },
-}
-
-const formTailLayoutSmall = {
-  wrapperCol: { span: 24 },
 }
 
 @AntForm.create()
@@ -265,15 +258,19 @@ class Form extends React.Component {
   }
 
   getFormItem = (itemConfig, isSubItem) => {
-    const { form, errors, values } = this.props
-    const { field, label, type, rules, items, render } = itemConfig
+    const { form, errors, values, columnLayout } = this.props
+    const { field, label, type, rules, items, render, layout: itemLayout } = itemConfig
     let { props, initialValue } = itemConfig
+
+    const layout = itemLayout || columnLayout || { span: 24 }
 
     if (type === 'custom') {
       return (
-        <AntForm.Item key={field} label={label} className={isSubItem ? 'mb-0' : null} {...props}>
-          {render && render(form)}
-        </AntForm.Item>
+        <Col {...layout}>
+          <AntForm.Item key={field} label={label} className={isSubItem ? 'mb-0' : null} {...props}>
+            {render && render(form)}
+          </AntForm.Item>
+        </Col>
       )
     }
 
@@ -314,44 +311,80 @@ class Form extends React.Component {
     const fieldDecoratorOptions = { rules, initialValue, ...extraProps }
 
     return (
-      <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>
-        {!items && form.getFieldDecorator(field, fieldDecoratorOptions)(this.getItem(itemConfig))}
-        {items && items.map(subItemConfig => this.getFormItem(subItemConfig, true))}
-      </AntForm.Item>
+      <Col {...layout}>
+        <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>
+          {!items && form.getFieldDecorator(field, fieldDecoratorOptions)(this.getItem(itemConfig))}
+          {items && items.map(subItemConfig => this.getFormItem(subItemConfig, true))}
+        </AntForm.Item>
+      </Col>
     )
   }
 
   render() {
-    const { loading, submitText, compact, layout, submitType, submitBlock, children } = this.props
-    let { config } = this.props
-    let itemLayout
-    let tailLayout
+    const {
+      loading,
+      submitText,
+      compact,
+      submitType,
+      submitBlock,
+      children,
+      sectionConfig,
+      sectionLayout,
+      submitLayout,
+    } = this.props
+    let { config, layout } = this.props
 
     // filter items based on hidden prop
-    config = config.filter(item => item.hidden !== true)
+    config = config && config.filter(item => item.hidden !== true)
 
-    if (layout !== 'inline') {
-      itemLayout = compact ? formItemLayoutSmall : formItemLayout
-      tailLayout = compact ? formTailLayoutSmall : formTailLayout
+    // backwords compatibility with older versions
+    if (compact) {
+      layout = 'vertical'
     }
 
     return (
       <AntForm
-        {...itemLayout}
+        {...((!layout || layout === 'horizontal') && formItemLayout)}
         hideRequiredMark
         onSubmit={this.handleSubmit}
         layout={layout}
         className={layout !== 'inline' && 'mb-4'}
       >
-        {config.map(itemConfig => this.getFormItem(itemConfig))}
+        {!sectionConfig && (
+          <Row gutter={32}>{config.map(itemConfig => this.getFormItem(itemConfig))}</Row>
+        )}
+
+        {sectionConfig &&
+          sectionConfig.map(section => {
+            const { title, wrapper } = sectionLayout || {
+              title: { md: 24, lg: 8 },
+              wrapper: { md: 24, lg: 16 },
+            }
+            let { config: subConfig } = section
+
+            subConfig = subConfig && subConfig.filter(item => item.hidden !== true)
+
+            return (
+              <Row gutter={[32, 32]} style={{ borderBottom: '1px solid #F0F0F0' }}>
+                <Col {...title}>
+                  <div style={{ fontSize: 16, fontWeight: 'bold' }}>{section.title}</div>
+                </Col>
+                <Col {...wrapper}>
+                  <Row gutter={32}>{subConfig.map(itemConfig => this.getFormItem(itemConfig))}</Row>
+                </Col>
+              </Row>
+            )
+          })}
+
         {children}
 
-        <AntForm.Item {...tailLayout}>
+        <AntForm.Item {...(submitLayout || formTailLayout)}>
           <Button
             type={submitType || 'primary'}
             htmlType="submit"
             block={submitBlock}
             loading={loading}
+            className={sectionConfig && 'mt-4'}
           >
             {submitText || 'Submit'}
           </Button>

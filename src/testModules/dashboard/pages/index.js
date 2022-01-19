@@ -89,10 +89,12 @@ class Dashboard extends React.Component {
           {
             field: 'input-text',
             placeholder: 'Input text',
+            layout: { span: 24 },
           },
           {
             type: 'custom',
             field: 'custom-2',
+            layout: { span: 24 },
             render: () => 'Just another text',
           },
         ],
@@ -103,6 +105,39 @@ class Dashboard extends React.Component {
         type: 'autocomplete',
         placeholder: 'Type to autocomplete',
         dataSource: ['ala', 'bala', 'porto', 'cala'],
+      },
+    ]
+
+    const sectionConfig = [
+      {
+        title: 'Section 1',
+        config: [
+          {
+            label: 'Input',
+            field: 'input1',
+            placeholder: 'Input text',
+          },
+          {
+            label: 'Input',
+            field: 'input2',
+            placeholder: 'Input text',
+          },
+        ],
+      },
+      {
+        title: 'Section 2',
+        config: [
+          {
+            label: 'Input',
+            field: 'input3',
+            placeholder: 'Input text',
+          },
+          {
+            label: 'Input',
+            field: 'input4',
+            placeholder: 'Input text',
+          },
+        ],
       },
     ]
 
@@ -130,6 +165,31 @@ class Dashboard extends React.Component {
             onSubmit={this.onSubmit}
             onChange={this.onChange}
             values={initialValues}
+          />
+        </Card>
+
+        <Card
+          title={<strong className="text-uppercase">Multi-column form</strong>}
+          className="mt-4"
+        >
+          <Form
+            config={config}
+            onSubmit={this.onSubmit}
+            onChange={this.onChange}
+            values={initialValues}
+            compact
+            columnLayout={{ xs: 24, sm: 12, lg: 8 }}
+            submitLayout={{ span: 12 }}
+          />
+        </Card>
+
+        <Card title={<strong className="text-uppercase">Sections form</strong>} className="mt-4">
+          <Form
+            sectionConfig={sectionConfig}
+            columnLayout={{ xs: 24, sm: 12 }}
+            submitLayout={{ span: 12 }}
+            compact
+            // sectionLayout={{ title: { md: 24, lg: 8 }, wrapper: { md: 24, lg: 16 } }}
           />
         </Card>
 
