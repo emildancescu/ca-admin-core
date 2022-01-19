@@ -26,9 +26,9 @@ const formItemLayout = {
   wrapperCol: { md: 12 },
 }
 
-const formTailLayout = {
-  wrapperCol: { md: { span: 16, offset: 8 } },
-}
+const formTailLayout = layout => ({
+  wrapperCol: layout || { md: { span: 16, offset: 8 } },
+})
 
 @AntForm.create()
 class Form extends React.Component {
@@ -378,7 +378,7 @@ class Form extends React.Component {
 
         {children}
 
-        <AntForm.Item {...(submitLayout || formTailLayout)}>
+        <AntForm.Item {...formTailLayout(compact ? { span: 24 } : submitLayout)}>
           <Button
             type={submitType || 'primary'}
             htmlType="submit"

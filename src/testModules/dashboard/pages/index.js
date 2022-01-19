@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Button } from 'antd'
+import { Card, Button, Popover } from 'antd'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { FormattedMessage } from 'react-intl'
@@ -168,6 +168,28 @@ class Dashboard extends React.Component {
           />
         </Card>
 
+        <Card title={<strong className="text-uppercase">Popover form</strong>} className="mt-4">
+          <Popover
+            placement="bottomRight"
+            content={
+              <div style={{ width: 240 }}>
+                <Form
+                  config={config}
+                  onSubmit={this.onSubmit}
+                  onChange={this.onChange}
+                  values={initialValues}
+                  compact
+                />
+              </div>
+            }
+            trigger="click"
+          >
+            <Button type="primary" icon="plus">
+              Popover form
+            </Button>
+          </Popover>
+        </Card>
+
         <Card
           title={<strong className="text-uppercase">Multi-column form</strong>}
           className="mt-4"
@@ -179,7 +201,6 @@ class Dashboard extends React.Component {
             values={initialValues}
             compact
             columnLayout={{ xs: 24, sm: 12, lg: 8 }}
-            submitLayout={{ span: 12 }}
           />
         </Card>
 
@@ -187,7 +208,6 @@ class Dashboard extends React.Component {
           <Form
             sectionConfig={sectionConfig}
             columnLayout={{ xs: 24, sm: 12 }}
-            submitLayout={{ span: 12 }}
             compact
             // sectionLayout={{ title: { md: 24, lg: 8 }, wrapper: { md: 24, lg: 16 } }}
           />
