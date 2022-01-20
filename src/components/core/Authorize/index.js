@@ -76,23 +76,33 @@ class Authorize extends React.Component {
     const {
       user: { roles: userRoles, permissions: userPermissions },
     } = this.props // current user role
-    const { children, redirect = false, to = '/404', roles, permissions } = this.props
+    const {
+      children,
+      redirect = false,
+      to = '/404',
+      roles,
+      permissions,
+      notify,
+      unauthorized = null,
+    } = this.props
 
     const authorized = checkAccess(roles, userRoles) && checkAccess(permissions, userPermissions)
 
     const AuthorizedChildren = () => {
       // if user not equal needed role and if component is a page - make redirect to needed route
       if (!authorized && redirect) {
-        notification.error({
-          message: 'Unauthorized Access',
-          description: 'You have no rights to access this page!',
-        })
+        if (notify) {
+          notification.error({
+            message: 'Unauthorized access',
+            description: 'You cannot access this page.',
+          })
+        }
         return <Redirect to={to} />
       }
 
       // if user not authorized return null to component
       if (!authorized && !isDebug) {
-        return null
+        return unauthorized
       }
 
       if (!authorized && isDebug) {
