@@ -266,7 +266,7 @@ class Form extends React.Component {
 
     if (type === 'custom') {
       return (
-        <Col {...layout}>
+        <Col key={field} {...layout}>
           <AntForm.Item key={field} label={label} className={isSubItem ? 'mb-0' : null} {...props}>
             {render && render(form)}
           </AntForm.Item>
@@ -311,7 +311,7 @@ class Form extends React.Component {
     const fieldDecoratorOptions = { rules, initialValue, ...extraProps }
 
     return (
-      <Col {...layout}>
+      <Col key={field} {...layout}>
         <AntForm.Item key={field} label={label} {...props} className={isSubItem ? 'mb-0' : null}>
           {!items && form.getFieldDecorator(field, fieldDecoratorOptions)(this.getItem(itemConfig))}
           {items && items.map(subItemConfig => this.getFormItem(subItemConfig, true))}
