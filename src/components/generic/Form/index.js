@@ -365,7 +365,11 @@ class Form extends React.Component {
             subConfig = subConfig && subConfig.filter(item => item.hidden !== true)
 
             return (
-              <Row gutter={[32, 32]} style={{ borderBottom: '1px solid #F0F0F0' }}>
+              <Row
+                key={section.title}
+                gutter={[32, 32]}
+                style={{ borderBottom: '1px solid #F0F0F0' }}
+              >
                 <Col {...title}>
                   <div style={{ fontSize: 16, fontWeight: 'bold' }}>{section.title}</div>
                 </Col>
