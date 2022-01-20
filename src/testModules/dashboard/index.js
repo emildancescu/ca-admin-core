@@ -17,6 +17,11 @@ export default {
       // roles: ['admin'],
       // permission: 'menu_dashboard'
     },
+    {
+      title: 'Remote Select',
+      key: 'remoteSelect',
+      url: '/remoteSelect',
+    },
   ],
   routes: [
     {
@@ -29,6 +34,10 @@ export default {
       component: Loadable(() => import('./pages/modalJumpTab')),
       exact: true,
       modal: true,
+    },
+    {
+      path: '/remoteSelect',
+      component: Loadable(() => import('./pages/remoteSelectUsers')),
     },
   ],
   locales: {

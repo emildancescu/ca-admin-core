@@ -100,6 +100,7 @@ class Form extends React.Component {
 
     const select = mode => (
       <Select
+        style={{ minWidth: '192px' }}
         mode={mode}
         showSearch
         placeholder={placeholder}

@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { Form, setDynamicRoles } from 'lib'
 
 import TableFix from './tableSortFix'
-import RemoteSelectUsers from './remoteSelectUsers'
+// import RemoteSelectUsers from './remoteSelectUsers'
 
 @connect()
 class Dashboard extends React.Component {
@@ -133,9 +133,9 @@ class Dashboard extends React.Component {
           />
         </Card>
 
-        <Card className="mt-4" title={<strong className="text-uppercase">Remote select</strong>}>
+        {/* <Card className="mt-4" title={<strong className="text-uppercase">Remote select</strong>}>
           <RemoteSelectUsers />
-        </Card>
+        </Card> */}
 
         <Card className="mt-4 mb-4" title={<strong className="text-uppercase">Modals</strong>}>
           <div className="mb-5" style={{ textAlign: 'center' }}>

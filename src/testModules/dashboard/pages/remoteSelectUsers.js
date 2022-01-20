@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import { Form, getToken } from 'lib'
+import { Card } from 'antd'
 
 const API = `https://stage.api.citylink.ro/api/v1/admin/users`
 
@@ -196,7 +197,7 @@ class RemoteSelectUsers extends React.Component {
         label: 'Users Single',
         field: 'users_single',
         type: 'remoteSelect',
-        remoteSearch: remoteSearchUsersSingle,
+        remoteSearch: { ...remoteSearchUsersSingle, placeholder: 'Placeholder' },
         // either with implicitValues
         // initialValue: 627,
         options: [{ text: 'Nico Pushwoosh', value: 627 }],
@@ -237,7 +238,66 @@ class RemoteSelectUsers extends React.Component {
       },
     ]
 
-    return <Form onSubmit={this.handleSubmit} config={formConfig} values={implicitValues} />
+    const horizontal = [
+      {
+        label: 'Input',
+        field: 'inputsimple',
+      },
+      {
+        label: 'Select',
+        field: 'select',
+        type: 'select',
+        placeholder: '- select option -',
+        options: ['Option 1', 'Option 2'],
+      },
+      {
+        label: 'Select',
+        field: 'select',
+        type: 'multiple',
+        placeholder: '- select option -',
+        options: ['Option 1', 'Option 2'],
+      },
+      {
+        label: 'Users Multiple',
+        field: 'users_multiple',
+        type: 'remoteSelect',
+        remoteSearch: remoteSearchUsersMultiple,
+        placeholder: 'Placeholder',
+        // either with implicitValues
+        // initialValue: someUsers.map((obj => obj.id)),
+        // options: someUsers.map(obj => {
+        //   return { text: `${obj.first_name} ${obj.last_name}`, value: obj.id }
+        // }),
+      },
+      {
+        label: 'Users Single',
+        field: 'users_single',
+        type: 'remoteSelect',
+        remoteSearch: { ...remoteSearchUsersSingle, placeholder: 'Placeholder' },
+        // placeholder: 'Placeholder',
+        // either with implicitValues
+        // initialValue: 627,
+        // options: [{ text: 'Nico Pushwoosh', value: 627 }],
+      },
+    ]
+
+    return (
+      <Card title={<strong>Remote select</strong>}>
+        <div>
+          <strong>
+            <center>Layout vertical</center>
+          </strong>
+        </div>
+        <Form onSubmit={this.handleSubmit} config={formConfig} values={implicitValues} />
+
+        <div className="mt-4">
+          <strong>
+            <center>Layout horizontal</center>
+          </strong>
+        </div>
+        <Form onSubmit={this.handleSubmit} config={horizontal} layout="inline" />
+      </Card>
+    )
   }
 }
 

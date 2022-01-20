@@ -128,6 +128,8 @@ class RemoteSelect extends React.Component {
 
     return (
       <Select
+        // Similar width as input boxes
+        style={{ minWidth: '192px' }}
         {...restRS}
         // DO NOT modify below default props
         {...restProps}
