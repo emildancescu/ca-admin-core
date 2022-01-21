@@ -66,6 +66,7 @@ class ProfileMenu extends React.Component {
             shape="square"
             size="large"
             src={user.profile_picture}
+            icon="user"
           />
         </div>
       </Dropdown>
