@@ -14,6 +14,8 @@ import defaultModules from 'modules'
 import initReducers from 'redux/reducers'
 import initSagas from 'redux/sagas'
 
+import { IntlReduxMiddleware } from '../Localization/IntlReduxMiddleware'
+
 // app styles
 import 'assets/styles/global.scss'
 
@@ -23,7 +25,7 @@ serviceWorker.unregister()
 const history = createBrowserHistory()
 const sagaMiddleware = createSagaMiddleware()
 const routeMiddleware = routerMiddleware(history)
-const middlewares = [thunk, sagaMiddleware, routeMiddleware]
+const middlewares = [IntlReduxMiddleware, thunk, sagaMiddleware, routeMiddleware]
 
 // Redux Logger
 if (process.env.REACT_APP_REDUX_LOGGER === 'true') {

@@ -6,6 +6,9 @@ import ro from './locales/ro'
 import users from './list/reducers'
 import usersSaga from './list/sagas'
 
+import rsintl from './redux/reduxSagaIntl/reducers'
+import rsintlSaga from './redux/reduxSagaIntl/sagas'
+
 export default {
   name: 'dashboard',
   menu: [
@@ -16,6 +19,11 @@ export default {
       icon: 'icmn icmn-home',
       // roles: ['admin'],
       // permission: 'menu_dashboard'
+    },
+    {
+      title: 'Redux Saga Intl',
+      key: 'reduxSagaIntl',
+      url: '/reduxSagaIntl',
     },
   ],
   routes: [
@@ -30,6 +38,11 @@ export default {
       exact: true,
       modal: true,
     },
+    {
+      path: '/reduxSagaIntl',
+      component: Loadable(() => import('./pages/reduxSagaIntl')),
+      exact: true,
+    },
   ],
   locales: {
     ro,
@@ -37,6 +50,7 @@ export default {
   },
   reducers: {
     users,
+    rsintl,
   },
-  sagas: [usersSaga()],
+  sagas: [usersSaga(), rsintlSaga()],
 }
