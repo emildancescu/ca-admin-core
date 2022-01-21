@@ -1,0 +1,5 @@
+NODE_PATH=src
+
+REACT_APP_REDUX_LOGGER=true
+REACT_APP_PERMISSIONS_DEBUG=true
+REACT_APP_BASE_URL=https://stage.api.citylink.ro

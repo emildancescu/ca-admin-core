@@ -1,6 +1,6 @@
-import React from 'react'
+import * as React from 'react'
 import { ConfigProvider } from 'antd'
-import { IntlProvider } from 'react-intl'
+import { RawIntlProvider } from 'react-intl'
 import { connect } from 'react-redux'
 
 import english from 'locales/en'
@@ -8,59 +8,51 @@ import romanian from 'locales/ro'
 import ukrainean from 'locales/uk'
 import russian from 'locales/ru'
 
-const locales = {
+import { IntlSetup } from './intlSetup'
+
+const defaultLocale = {
   en: english,
   ro: romanian,
   uk: ukrainean,
   ru: russian,
 }
 
-@connect(({ settings }) => ({ settings }))
-class Localization extends React.Component {
-  constructor(props) {
-    super(props)
+const mapStateToProps = ({ settings }) => ({ lang: settings.locale })
 
-    const { locales: messages } = props
+const Localization = props => {
+  const { children, lang, locales } = props
 
-    this.processMessages(messages)
-  }
+  const CoreLocale = defaultLocale[lang] || english
 
-  processMessages = messages => {
+  const processMessages = messages => {
     const reindexedMessages = {}
 
     Object.values(messages).forEach(chunk => {
-      Object.keys(chunk).forEach(lang => {
-        reindexedMessages[lang] = {
-          ...reindexedMessages[lang],
-          ...chunk[lang],
+      Object.keys(chunk).forEach(language => {
+        reindexedMessages[language] = {
+          ...reindexedMessages[language],
+          ...chunk[language],
         }
       })
     })
 
-    // console.log('reindexedMessages', reindexedMessages)
-    this.messages = reindexedMessages
+    return reindexedMessages
   }
 
-  render() {
-    const {
-      children,
-      settings: { locale },
-    } = this.props
+  const ModuleLocale = processMessages(locales)
 
-    const currentLocale = locales[locale] || english
-
-    return (
-      <ConfigProvider locale={currentLocale.antdData}>
-        <IntlProvider
-          locale={currentLocale.locale}
-          defaultLocale="en"
-          messages={{ ...currentLocale.messages, ...this.messages[locale] }}
-        >
-          {children}
-        </IntlProvider>
-      </ConfigProvider>
-    )
+  const AppLocale = {
+    ...CoreLocale.messages,
+    ...ModuleLocale[lang],
   }
+
+  const intl = IntlSetup({ locale: lang, messages: AppLocale })
+
+  return (
+    <ConfigProvider locale={CoreLocale.antdData}>
+      <RawIntlProvider value={intl}>{children}</RawIntlProvider>
+    </ConfigProvider>
+  )
 }
 
-export default Localization
+export default connect(mapStateToProps)(Localization)
