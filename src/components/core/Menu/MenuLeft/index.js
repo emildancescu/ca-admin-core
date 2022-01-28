@@ -35,7 +35,9 @@ const DebugPopoverContent = props => {
         <div>
           <b>Roles:</b>{' '}
           {roles.map(role => (
-            <Tag className="mb-1">{role}</Tag>
+            <Tag key={role} className="mb-1">
+              {role}
+            </Tag>
           ))}
         </div>
       )}
@@ -43,7 +45,9 @@ const DebugPopoverContent = props => {
         <div>
           <b>Permissions:</b>{' '}
           {permissions.map(perm => (
-            <Tag className="mb-1">{perm}</Tag>
+            <Tag key={perm} className="mb-1">
+              {perm}
+            </Tag>
           ))}
         </div>
       )}
