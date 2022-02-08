@@ -219,7 +219,7 @@ class Form extends React.Component {
         return <Checkbox>{placeholder}</Checkbox>
       case 'file':
         return (
-          <Upload name="file" {...rest}>
+          <Upload name="file" disabled={disabled} {...rest}>
             <Button icon="upload">{placeholder}</Button>
           </Upload>
         )
