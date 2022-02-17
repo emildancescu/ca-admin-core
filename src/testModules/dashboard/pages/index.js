@@ -1,12 +1,12 @@
+/* eslint-disable camelcase */
 import React from 'react'
 import { Card, Button, Popover } from 'antd'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import { FormattedMessage } from 'react-intl'
 import { Link } from 'react-router-dom'
-
+import moment from 'moment'
 import { Form, setDynamicRoles } from 'lib'
-
 import TableFix from './tableSortFix'
 import RemoteSelectUsers from './remoteSelectUsers'
 
@@ -233,6 +233,8 @@ class Dashboard extends React.Component {
           <RemoteSelectUsers />
         </Card>
 
+        <FormRefs />
+
         <Card className="mt-4 mb-4" title={<strong className="text-uppercase">Modals</strong>}>
           <div className="mb-5" style={{ textAlign: 'center' }}>
             <Link
@@ -262,3 +264,68 @@ class Dashboard extends React.Component {
 }
 
 export default Dashboard
+
+const FormRefs = () => {
+  const formRef = React.createRef()
+
+  const formRef_2 = React.createRef()
+
+  const config = [
+    {
+      label: 'Input',
+      field: 'input',
+      placeholder: 'Input text',
+    },
+    {
+      label: 'Date',
+      field: 'date',
+      type: 'date',
+      placeholder: 'Select date',
+    },
+    {
+      label: 'Select',
+      field: 'select',
+      type: 'select',
+      placeholder: '- select option -',
+      options: [
+        { text: 'Option 1', value: 1 },
+        { text: 'Option 2', value: 2 },
+      ],
+    },
+  ]
+
+  const handleSetFields = () => {
+    formRef_2.current.props.form.setFieldsValue({
+      input: 'test',
+      date: moment(),
+      select: 1,
+    })
+  }
+
+  console.log('--------formRef', formRef)
+  console.log('--------formRef_2', formRef_2)
+
+  return (
+    <Card title={<strong>Form Refs instance</strong>} className="mt-4">
+      <Form
+        wrappedComponentRef={formRef}
+        config={config}
+        onSubmit={() => console.log(formRef.current && formRef.current.props.form.getFieldsValue())}
+        columnLayout={{ xs: 8 }}
+        compact
+      />
+
+      <Form
+        wrappedComponentRef={formRef_2}
+        config={config}
+        onSubmit={() =>
+          console.log(formRef_2.current && formRef_2.current.props.form.getFieldsValue())
+        }
+        columnLayout={{ xs: 8 }}
+        compact
+      />
+
+      <Button onClick={handleSetFields}>Set fields on 2nd form only</Button>
+    </Card>
+  )
+}
