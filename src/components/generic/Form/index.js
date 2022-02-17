@@ -216,7 +216,11 @@ class Form extends React.Component {
           />
         )
       case 'checkbox':
-        return <Checkbox>{placeholder}</Checkbox>
+        return (
+          <Checkbox disabled={disabled} onChange={() => this.handleOnChange(field)} {...rest}>
+            {placeholder}
+          </Checkbox>
+        )
       case 'file':
         return (
           <Upload name="file" {...rest}>

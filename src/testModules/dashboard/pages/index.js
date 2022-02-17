@@ -16,8 +16,18 @@ class Dashboard extends React.Component {
     console.log(values)
   }
 
-  onChange = (field, values) => {
-    console.log('changed value', field, values[field])
+  // onChange = (field, values) => {
+  //   console.log('changed value', field, values[field])
+  // }
+
+  /* 
+    Args from Form component : onChange(field, getFieldsValue(), setFieldsValue)
+      field -> field name
+      getFieldsValue() -> object with all form fields values
+      setFieldsValue -> functionn to set a field value
+  */
+  onChange = (...args) => {
+    console.log('onChange', args)
   }
 
   handleAddDynamicRole = () => {
@@ -105,6 +115,12 @@ class Dashboard extends React.Component {
         type: 'autocomplete',
         placeholder: 'Type to autocomplete',
         dataSource: ['ala', 'bala', 'porto', 'cala'],
+      },
+      {
+        label: 'Checkbox',
+        field: 'checkboxasdwdz',
+        type: 'checkbox',
+        placeholder: 'placeholder',
       },
     ]
 
