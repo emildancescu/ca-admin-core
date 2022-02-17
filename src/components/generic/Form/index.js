@@ -355,7 +355,7 @@ class Form extends React.Component {
         )}
 
         {sectionConfig &&
-          sectionConfig.map(section => {
+          sectionConfig.map((section, index) => {
             const { title, wrapper } = sectionLayout || {
               title: { md: 24, lg: 8 },
               wrapper: { md: 24, lg: 16 },
@@ -366,7 +366,7 @@ class Form extends React.Component {
 
             return (
               <Row
-                key={section.title}
+                key={section.key || section.title || index}
                 gutter={[32, 32]}
                 style={{ borderBottom: '1px solid #F0F0F0' }}
               >
