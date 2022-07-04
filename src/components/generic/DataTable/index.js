@@ -72,10 +72,21 @@ class DataTable extends React.Component {
     }
 
     // if extra load action params were set as a prop, merge with those as well
+    /* 
+      Preserve state params filters and prop filters
+      Merge above with filters from loadActionPayload filters
+    */
     if (loadActionPayload) {
-      params = {
-        ...params,
-        ...loadActionPayload,
+      if (loadActionPayload.filters) {
+        params = {
+          ...params,
+          filters: {
+            ...params.filters,
+            ...loadActionPayload.filters,
+          },
+        }
+      } else {
+        params = { ...params, ...loadActionPayload }
       }
     }
 
