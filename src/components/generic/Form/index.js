@@ -33,8 +33,17 @@ const formTailLayout = layout => ({
 @AntForm.create()
 class Form extends React.Component {
   processValues = values => {
-    const processed = {}
+    const { legacy } = this.props
 
+    if (legacy) {
+      const processed = {}
+      Object.keys(values).forEach(key => {
+        processed[key] = values[key] === null || values[key] === '' ? undefined : values[key]
+      })
+      return processed
+    }
+
+    const processed = {}
     Object.keys(values).forEach(key => {
       processed[key] = _.isUndefined(values[key]) ? null : values[key]
     })
