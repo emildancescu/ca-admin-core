@@ -77,16 +77,21 @@ class DataTable extends React.Component {
       Merge above with filters from loadActionPayload filters
     */
     if (loadActionPayload) {
-      if (loadActionPayload.filters) {
+      const { filters: filtersFromPayload, ...rest } = loadActionPayload
+
+      params = {
+        ...params,
+        ...rest,
+      }
+
+      if (filtersFromPayload) {
         params = {
           ...params,
           filters: {
             ...params.filters,
-            ...loadActionPayload.filters,
+            ...filtersFromPayload,
           },
         }
-      } else {
-        params = { ...params, ...loadActionPayload }
       }
     }
 
