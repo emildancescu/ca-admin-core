@@ -1,9 +1,12 @@
-export const request = (options, action, extra) => ({
-  type: 'network/request',
+export const requestReduxActionType = 'network/request'
+
+export const request = (options, action, extra, networkSagaConfig) => ({
+  type: requestReduxActionType,
   payload: {
     options,
     action,
     extra,
+    networkSagaConfig,
   },
 })
 
@@ -16,6 +19,8 @@ export function networkActions(reducer) {
     SUCCESS: `${reducer}/success`,
     ERROR: `${reducer}/error`,
     RESET: `${reducer}/reset`,
+    CANCEL: `${reducer}/cancel`,
+    CANCELLED: `${reducer}/cancelled`,
   }
 }
 
@@ -31,5 +36,7 @@ export function extraNetworkActions(prefix, reducer) {
     [getPrefix(prefix, 'SUCCESS')]: `${reducer}/success`,
     [getPrefix(prefix, 'ERROR')]: `${reducer}/error`,
     [getPrefix(prefix, 'RESET')]: `${reducer}/reset`,
+    [getPrefix(prefix, 'CANCEL')]: `${reducer}/cancel`,
+    [getPrefix(prefix, 'CANCELLED')]: `${reducer}/cancelled`,
   }
 }

@@ -44,6 +44,9 @@ const defaultAuthConfig = {
 
     return transformedPayload
   },
+  networkSagaConfig: {
+    timeout: 60,
+  },
 }
 
 export default (config = {}) => {

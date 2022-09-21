@@ -2,12 +2,11 @@ import store from 'store'
 
 function toQueryString(params, nesting = '') {
   return Object.entries(params)
-    .filter(([k, v]) => k && v !== null)
     .map(([k, v]) => {
       k = encodeURIComponent(k)
 
-      // check if there are nested objects
-      if (typeof v === 'object') {
+      // check if there are nested objects and not null
+      if (typeof v === 'object' && v !== null) {
         return toQueryString(v, nesting ? `${nesting}[${k}]` : `${k}`)
       }
 
@@ -15,11 +14,12 @@ function toQueryString(params, nesting = '') {
 
       return nesting ? `${nesting}[${k}]=${v}` : `${k}=${v}`
     })
+    .filter(el => el !== '')
     .join('&')
 }
 
 export function api(options) {
-  const { params, method = 'GET', token = '' } = options
+  const { params, method = 'GET', token = '', signal } = options
   let { url, headers } = options
 
   const lang = store.get('app.settings.locale') || 'en'
@@ -34,6 +34,7 @@ export function api(options) {
   let newOptions = {
     headers,
     method,
+    signal,
   }
 
   if (method === 'POST' || method === 'PUT') {
@@ -51,9 +52,14 @@ export function api(options) {
     }
   }
 
-  // console.log('fetch url', url);
+  return (
+    fetch(url, newOptions)
+      // .then((r) => console.log('fetch r', r))
 
-  return fetch(url, newOptions)
+      // Abort controller from network saga will internally throw a DOMException
+      // We should catch it just in case
+      .catch(e => console.log('fetch error', e))
+  )
 }
 
 export function postJson(url, params, token, headers) {
