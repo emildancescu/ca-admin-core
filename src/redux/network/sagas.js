@@ -1,8 +1,9 @@
-import { all, takeEvery, put, call, race, delay } from 'redux-saga/effects'
+import { all, takeEvery, put, call, race, delay, take } from 'redux-saga/effects'
 import { notification } from 'antd'
 import _ from 'lodash'
 import { api } from 'utils/net'
 import actions from 'redux/user/actions'
+import { requestReduxActionType } from './actions'
 
 function showErrorNotification(content, title = 'Oops') {
   let description = 'Something went wrong, please retry.'
@@ -29,9 +30,22 @@ function showErrorNotification(content, title = 'Oops') {
   })
 }
 
-function request(loginUrl) {
+function request(config) {
   return function* REQUEST({ payload }) {
-    const { options, action, extra } = payload
+    const {
+      url: loginUrl,
+      networkSagaConfig: { timeout },
+    } = config
+
+    const { options, action, extra, networkSagaConfig } = payload
+
+    let api_delay = timeout
+
+    if (networkSagaConfig) {
+      if (networkSagaConfig.timeout) {
+        api_delay = networkSagaConfig.timeout
+      }
+    }
 
     try {
       yield put({
@@ -39,16 +53,32 @@ function request(loginUrl) {
         payload: {
           extra,
         },
+        requestPayload: payload,
       })
 
-      const { response, timeout } = yield race({
-        response: call(api, options),
-        timeout: delay(60 * 1000),
+      const controller = new AbortController()
+      const { signal } = controller
+
+      const { response, r_timeout, r_cancel } = yield race({
+        response: call(api, { ...options, signal }),
+        r_timeout: delay(api_delay * 1000),
+        r_cancel: take(`${action}/cancel`),
       })
 
-      // handle timeouts
+      // Handle cancel
+      if (r_cancel) {
+        controller.abort()
 
-      if (timeout) {
+        yield put({
+          type: `${action}/cancelled`,
+          requestPayload: payload,
+        })
+
+        return
+      }
+
+      // Handle API timeout
+      if (r_timeout) {
         notification.warning({
           message: 'Slow connection',
           description: 'Request timed out. Please retry.',
@@ -56,35 +86,33 @@ function request(loginUrl) {
 
         yield put({
           type: `${action}/error`,
+          requestPayload: payload,
         })
 
         return
       }
 
-      // get json data
-
+      // Get JSON data
       const data = yield call([response, response.json])
-
-      // console.log(data)
 
       if (response.ok) {
         yield put({
           type: `${action}/success`,
           payload: data,
+          requestPayload: payload,
         })
 
         return
       }
 
-      // oops, something happened
-
+      // Oops, something happened!
       yield put({
         type: `${action}/error`,
         payload: data,
+        requestPayload: payload,
       })
 
-      // check status code
-
+      // Check status code
       switch (response.status) {
         case 401:
           // is this a login attempt?
@@ -92,10 +120,11 @@ function request(loginUrl) {
             showErrorNotification(data)
             break
           }
-          console.log('401')
+
           // user not authorized, redirect to login
           yield put({
             type: actions.LOGOUT,
+            requestPayload: payload,
           })
           break
 
@@ -114,17 +143,14 @@ function request(loginUrl) {
         showErrorNotification()
       }
 
-      // console.log(e)
-
       yield put({
         type: `${action}/error`,
+        requestPayload: payload,
       })
     }
   }
 }
 
 export default function* rootSaga(config) {
-  const { url } = config
-
-  yield all([takeEvery('network/request', request(url))])
+  yield all([takeEvery(requestReduxActionType, request(config))])
 }
